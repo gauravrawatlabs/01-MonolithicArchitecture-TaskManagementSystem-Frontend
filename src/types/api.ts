@@ -12,3 +12,14 @@ export type TaskItemStatus = Schemas['TaskItemStatus'];
 export type TaskPriority = Schemas['TaskPriority'];
 export type SortDirection = NonNullable<Schemas['SortDirection']>;
 export type UserProfile = Schemas['UserProfileResponse'];
+
+// Authentication and account (Phase 6)
+export type AuthResponse = Schemas['AuthResponse'];
+export type LoginRequest = Schemas['LoginRequest'];
+export type RegisterRequest = Schemas['RegisterRequest'];
+export type RefreshTokenRequest = Schemas['RefreshTokenRequest'];
+export type ConfirmEmailRequest = Schemas['ConfirmEmailRequest'];
+export type ResendConfirmationEmailRequest = Schemas['ResendConfirmationEmailRequest'];
+export type ForgotPasswordRequest = Schemas['ForgotPasswordRequest'];
+export type ResetPasswordRequest = Schemas['ResetPasswordRequest'];
+export type ChangePasswordRequest = Schemas['ChangePasswordRequest'];

@@ -4,8 +4,8 @@ A React + TypeScript single-page application for the
 [Task Management System API](https://github.com/gauravrawatlabs/01-MonolithicArchitecture-TaskManagementSystem)
 (ASP.NET Core 10 Web API, monolithic architecture, SQL Server, JWT + refresh tokens, role-based authorization).
 
-> **Status: Phase 5 of 17 (layout and navigation).** All routes, the app shell and guards are in place; pages are filled in from Phase 6.
-> Until real login exists (Phase 7), development builds offer temporary *preview accounts* on the sign-in page.
+> **Status: Phase 6 of 17 (authentication UI).** Sign in, registration, email confirmation and password flows work against the API.
+> Sessions are kept in memory until Phase 7 (a reload signs you out). Development builds still offer temporary *preview accounts*.
 > The project is built phase by phase as a learning project; see the [progress tracker](docs/00-Progress-Tracker.md).
 
 ## Architecture at a glance
@@ -37,6 +37,7 @@ ESLint · Prettier
 | 03 | [Project setup](docs/03-Phase3-Project-Setup.md) | Tools and versions, every config file, env variables, commands, verification |
 | 04 | [Design system and common components](docs/04-Phase4-Design-System-and-Common-Components.md) | Tokens, dark mode, component catalogue, accessibility, defects found |
 | 05 | [Layout and navigation](docs/05-Phase5-Layout-and-Navigation.md) | Routing, lazy pages, guards, open-redirect protection, responsive shell |
+| 06 | [Authentication UI](docs/06-Phase6-Authentication-UI.md) | Forms with RHF + Zod, API client and errors, account flows, security decisions |
 
 ## Getting started
 
@@ -53,7 +54,8 @@ npm run dev                 # http://localhost:3000 (the backend's CORS and emai
 |---|---|
 | `npm run verify` | typecheck → lint → format check → unit/integration tests → production build |
 | `npm run test` | Vitest unit + integration tests (MSW, no backend needed) |
-| `npm run test:e2e:install` then `npm run test:e2e` | Playwright end-to-end tests (desktop, tablet, mobile) |
+| `npm run test:e2e:install` then `npm run test:e2e` | Playwright end-to-end tests (desktop, tablet, mobile); no backend needed |
+| `npm run test:e2e:backend` | Full flows against the **running** API (register → email link → sign in …); creates an `e2e-…@example.test` user in the dev database |
 | `npm run api:types` | Regenerate `src/api/generated/schema.ts` from the running backend |
 | `npm run build` | Production build into `dist/` (needs `VITE_API_BASE_URL`, see below) |
 

@@ -5,7 +5,8 @@ const baseURL = 'http://localhost:3000';
 
 /**
  * End-to-end tests run in a real browser against the running app (and, from Phase 7 on,
- * the real ASP.NET Core API). Three projects cover the responsive breakpoints from Phase 1 §12.
+ * the real ASP.NET Core API). Three projects cover the responsive breakpoints from Phase 1 §12;
+ * the "backend" project runs complete flows against the real API.
  * Only Chromium is installed locally (npm run test:e2e:install); tablet uses Chromium too.
  */
 export default defineConfig({
@@ -20,9 +21,16 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
   projects: [
-    { name: 'desktop', use: { ...devices['Desktop Chrome'] } },
-    { name: 'tablet', use: { ...devices['iPad Mini'], browserName: 'chromium' } },
-    { name: 'mobile', use: { ...devices['Pixel 7'] } },
+    // UI tests: no backend needed (API calls are faked with page.route where required).
+    { name: 'desktop', testIgnore: '**/*.backend.spec.ts', use: { ...devices['Desktop Chrome'] } },
+    {
+      name: 'tablet',
+      testIgnore: '**/*.backend.spec.ts',
+      use: { ...devices['iPad Mini'], browserName: 'chromium' },
+    },
+    { name: 'mobile', testIgnore: '**/*.backend.spec.ts', use: { ...devices['Pixel 7'] } },
+    // Full flows against the REAL ASP.NET Core API (must be running): npm run test:e2e:backend
+    { name: 'backend', testMatch: '**/*.backend.spec.ts', use: { ...devices['Desktop Chrome'] } },
   ],
   webServer: {
     command: 'npm run dev',

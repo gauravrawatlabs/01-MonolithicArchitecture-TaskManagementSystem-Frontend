@@ -1,6 +1,7 @@
 import { render, type RenderResult } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
-import { createMemoryRouter, type RouteObject } from 'react-router';
+import { StrictMode } from 'react';
+import { createMemoryRouter, parsePath, type RouteObject } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
 
 import { AppProviders } from '@/app/providers/AppProviders';
@@ -14,6 +15,10 @@ export interface RenderRouteOptions {
   user?: UserProfile | null;
   /** Custom route tree (default: the real app routes). */
   routes?: RouteObject[];
+  /** Router state for the first entry (e.g. { email } for the "check your email" page). */
+  state?: unknown;
+  /** Render inside <StrictMode> (double-invoked effects, as in development). */
+  strict?: boolean;
 }
 
 /**
@@ -22,15 +27,16 @@ export interface RenderRouteOptions {
  */
 export function renderRoute(
   path: string,
-  { user = null, routes = createAppRoutes() }: RenderRouteOptions = {},
+  { user = null, routes = createAppRoutes(), state, strict = false }: RenderRouteOptions = {},
 ): RenderResult & { user: UserEvent; router: MemoryRouter } {
-  const router = createMemoryRouter(routes, { initialEntries: [path] });
+  const router = createMemoryRouter(routes, { initialEntries: [{ ...parsePath(path), state }] });
   const userEventInstance = userEvent.setup();
-  const result = render(
+  const app = (
     <AppProviders initialUser={user}>
       <RouterProvider router={router} />
-    </AppProviders>,
+    </AppProviders>
   );
+  const result = render(strict ? <StrictMode>{app}</StrictMode> : app);
   return { ...result, user: userEventInstance, router };
 }
 

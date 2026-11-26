@@ -1,7 +1,9 @@
 import { type AnyHandler } from 'msw';
 
+import { authHandlers } from './auth';
+
 /**
- * Default MSW request handlers, one file per API area (auth.ts, tasks.ts, …) from Phase 7 onwards.
- * Tests override them per scenario with server.use(...).
+ * Default MSW request handlers, one file per API area. Tests override them per scenario with
+ * server.use(...); unmatched requests fail the test (onUnhandledFrame: 'error').
  */
-export const handlers: AnyHandler[] = [];
+export const handlers: AnyHandler[] = [...authHandlers];

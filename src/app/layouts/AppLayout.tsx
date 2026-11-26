@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Outlet, useNavigate, useNavigation } from 'react-router';
+import { Outlet, useNavigation } from 'react-router';
 
 import { Avatar } from '@/components/common/Avatar';
 import { ThemeToggle } from '@/components/common/ThemeToggle';
@@ -11,7 +11,6 @@ import { Topbar } from '@/components/layout/Topbar';
 import { UserMenu } from '@/components/layout/UserMenu';
 import { env } from '@/constants/env';
 import { NAV_SECTIONS, type NavSection, SETTINGS_NAV_ITEM } from '@/constants/navigation';
-import { paths } from '@/constants/routes';
 import { hasAnyRole, isEmailVerified, useAuth } from '@/features/auth';
 import { DESKTOP_QUERY, TABLET_QUERY, useMediaQuery } from '@/hooks/useMediaQuery';
 import { readSidebarCollapsed, writeSidebarCollapsed } from '@/services/preferencesStorage';
@@ -36,7 +35,6 @@ function visibleSections(user: UserProfile | null): NavSection[] {
  */
 export function AppLayout() {
   const { user, signOut } = useAuth();
-  const navigate = useNavigate();
   const navigation = useNavigation();
   const isDesktop = useMediaQuery(DESKTOP_QUERY);
   const isTabletUp = useMediaQuery(TABLET_QUERY);
@@ -54,10 +52,9 @@ export function AppLayout() {
     });
   };
 
+  // RequireAuth navigates to the sign-in page when the session ends (single navigation source).
   const handleSignOut = () => {
-    void signOut().then(() => {
-      void navigate(paths.login, { replace: true });
-    });
+    void signOut();
   };
 
   const userCard = (rail: boolean) =>

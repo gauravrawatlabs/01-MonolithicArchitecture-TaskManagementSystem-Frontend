@@ -50,24 +50,32 @@ export function FormField({
 
   return (
     <div className={cn('grid gap-1.5', className)}>
-      <label htmlFor={controlId} className="text-sm font-medium text-foreground">
-        {label}
+      {/*
+        The asterisk sits NEXT TO the label, not inside it, so the label's text is exactly the field
+        name ("Email", not "Email*") for voice control and tests. aria-required on the control tells
+        screen readers the field is required.
+      */}
+      <div className="flex items-baseline gap-0.5">
+        <label htmlFor={controlId} className="text-sm font-medium text-foreground">
+          {label}
+        </label>
         {required ? (
-          <span aria-hidden="true" className="ml-0.5 text-danger">
+          <span aria-hidden="true" className="text-sm text-danger">
             *
           </span>
         ) : null}
-      </label>
+      </div>
       {children({
         id: controlId,
         ...(describedBy ? { 'aria-describedby': describedBy } : {}),
         ...(error ? { 'aria-invalid': true as const } : {}),
         ...(required ? { 'aria-required': true as const } : {}),
       })}
+      {/* <div>, not <p>: hints may contain block content such as the password checklist (<ul>). */}
       {hint ? (
-        <p id={hintId} className="text-xs text-muted-foreground">
+        <div id={hintId} className="text-xs text-muted-foreground">
           {hint}
-        </p>
+        </div>
       ) : null}
       {error ? (
         <p id={errorId} className="flex items-center gap-1 text-xs font-medium text-danger">
