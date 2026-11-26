@@ -1,0 +1,10 @@
+/*
+ * Global styles. Tailwind CSS v4 is configured in CSS (no tailwind.config.js):
+ * @import pulls in Tailwind, @theme defines design tokens that become utility classes.
+ * The full design system (colours, light/dark tokens) is added in Phase 4.
+ */
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+}

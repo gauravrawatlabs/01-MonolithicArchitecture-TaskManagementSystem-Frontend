@@ -4,7 +4,7 @@ A React + TypeScript single-page application for the
 [Task Management System API](https://github.com/gauravrawatlabs/01-MonolithicArchitecture-TaskManagementSystem)
 (ASP.NET Core 10 Web API, monolithic architecture, SQL Server, JWT + refresh tokens, role-based authorization).
 
-> **Status: Phase 1 of 17 complete (requirements and UI/UX design).** No application code yet.
+> **Status: Phase 3 of 17 (project setup).** Tooling is in place; features start in Phase 4.
 > The project is built phase by phase as a learning project; see the [progress tracker](docs/00-Progress-Tracker.md).
 
 ## Architecture at a glance
@@ -33,8 +33,34 @@ ESLint · Prettier
 | 00 | [Progress tracker](docs/00-Progress-Tracker.md) | Status of all 17 phases |
 | 01 | [Requirements and UI/UX design](docs/01-Phase1-Requirements-and-UI-Design.md) | Backend contract, page inventory, journeys, wireframes, design system, role matrix, API and testing plans |
 | 02 | [Frontend architecture](docs/02-Phase2-Frontend-Architecture.md) | Component layers, folder structure, routing, state management, auth, API layer, error handling, conventions |
+| 03 | [Project setup](docs/03-Phase3-Project-Setup.md) | Tools and versions, every config file, env variables, commands, verification |
 
-## Local development (from Phase 3)
+## Getting started
 
-The API's CORS policy and email links expect the frontend at **`http://localhost:3000`**;
-the API runs at `http://localhost:5075` (Swagger at `/swagger`). Setup commands will be added in Phase 3.
+**Prerequisites:** Node.js 22.12+ (`nvm use` reads `.nvmrc`) and the
+[backend API](https://github.com/gauravrawatlabs/01-MonolithicArchitecture-TaskManagementSystem) running at
+`http://localhost:5075` (Swagger at `/swagger`).
+
+```bash
+npm install                 # install dependencies
+npm run dev                 # http://localhost:3000 (the backend's CORS and email links expect this port)
+```
+
+| Command | Purpose |
+|---|---|
+| `npm run verify` | typecheck → lint → format check → unit/integration tests → production build |
+| `npm run test` | Vitest unit + integration tests (MSW, no backend needed) |
+| `npm run test:e2e:install` then `npm run test:e2e` | Playwright end-to-end tests (desktop, tablet, mobile) |
+| `npm run api:types` | Regenerate `src/api/generated/schema.ts` from the running backend |
+| `npm run build` | Production build into `dist/` (needs `VITE_API_BASE_URL`, see below) |
+
+### Environment variables
+
+| Variable | Required | Example | Notes |
+|---|---|---|---|
+| `VITE_API_BASE_URL` | yes | `http://localhost:5075` | API origin, no trailing slash, no `/api` |
+| `VITE_APP_NAME` | no | `Task Management System` | Display name |
+
+`.env.development` and `.env.test` are committed (public values only). For a local production build, copy
+`.env.example` to `.env.production.local`. In CI/hosting, set real environment variables.
+**Everything in `VITE_*` variables is public, so never put secrets there.**

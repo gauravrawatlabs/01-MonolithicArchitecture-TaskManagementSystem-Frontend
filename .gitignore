@@ -6,10 +6,12 @@ dist/
 dist-ssr/
 *.local
 
-# Environment files (only .env.example is committed)
-.env
-.env.*
-!.env.example
+# Environment files
+# Committed: .env.example, .env.development, .env.test (public, non-secret values only).
+# Never committed: local overrides and production settings.
+.env.local
+.env.*.local
+.env.production
 
 # Tests
 coverage/

@@ -6,8 +6,8 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
 |---|---|---|---|---|---|---|
 | 1 | Requirements and UI/UX design | **Verified** (2026-11-26) | — (design only) | Backend: 188/188 after G1/G2 | — | [01-Phase1-Requirements-and-UI-Design.md](01-Phase1-Requirements-and-UI-Design.md) |
 | 2 | Frontend architecture | **Verified** (2026-11-26) | — (design only) | — | — | [02-Phase2-Frontend-Architecture.md](02-Phase2-Frontend-Architecture.md); D1–D6 approved |
-| 3 | Project setup | Pending | | | | Waiting for approval to start |
-| 4 | Design system and common components | Pending | | | | |
+| 3 | Project setup | **Verified** (2026-11-26) | 8 unit · 1 integration · 1 e2e (×3 viewports) | 9/9 + 3/3 | ✅ | [03-Phase3-Project-Setup.md](03-Phase3-Project-Setup.md); D7 = A (implemented) |
+| 4 | Design system and common components | Pending | | | | Waiting for approval to start |
 | 5 | Application layout and navigation | Pending | | | | |
 | 6 | Authentication UI | Pending | | | | |
 | 7 | Authentication and API integration | Pending | | | | |
@@ -52,3 +52,18 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
 - **Files created/modified:** `docs/02-Phase2-Frontend-Architecture.md`, `docs/00-Progress-Tracker.md`, `README.md`
 - **Pending issues:** none.
 - **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-26.
+
+## Phase 3 — Project setup
+
+- **Tasks completed:** Vite 8 + React 19 + TypeScript 5.9 project; Tailwind CSS 4; ESLint 10 (strict type-aware,
+  React hooks, jsx-a11y, no-console, architecture boundaries) and Prettier; all approved dependencies installed
+  (0 vulnerabilities); validated environment configuration; dev/preview server on port 3000; Vitest + Testing Library
+  + MSW setup; Playwright with desktop/tablet/mobile projects; API types generated from the backend OpenAPI document.
+- **Files created:** see [03-Phase3-Project-Setup.md §3](03-Phase3-Project-Setup.md#3-every-file-created-in-this-phase).
+- **Tests written:** `tests/unit/constants/env.test.ts` (8), `tests/integration/app.test.tsx` (1), `tests/e2e/smoke.spec.ts` (1 × 3 viewports).
+- **Tests passed:** Vitest 9/9 · Playwright 3/3.
+- **Build status:** ✅ `npm run build` (JS 91.6 kB gzip); typecheck, lint, format all clean.
+- **Decision D7 (A):** backend switched to `JsonNumberHandling.Strict` (+2 backend tests, 190/190 passing); API types regenerated, now 0 `number | string` fields.
+- **Pending issues:** none.
+- **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-26.
+

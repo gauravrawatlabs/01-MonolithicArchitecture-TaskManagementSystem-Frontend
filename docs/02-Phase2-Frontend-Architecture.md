@@ -117,7 +117,7 @@ touches one folder, and it stops `components/` from turning into a 200-file junk
 │   │   │   └── queryClient.ts    TanStack QueryClient: defaults for retry, staleTime, global error hooks
 │   │   └── router/
 │   │       ├── router.tsx        the route tree (createBrowserRouter), lazy-loaded pages
-│   │       ├── paths.ts          route path constants + builders: paths.project(12) → "/projects/12"
+│   │       ├── (paths moved)     route path builders live in src/constants/routes.ts (see Phase 3 §5.5)
 │   │       └── guards/           RequireAuth, RequireGuest, RequireRole (layout routes)
 │   │
 │   ├── api/                      HTTP INFRASTRUCTURE (shared by all features)
