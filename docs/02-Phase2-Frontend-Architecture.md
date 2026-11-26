@@ -544,7 +544,7 @@ eslint, prettier.
 
 | Package | Type | Why |
 |---|---|---|
-| `@radix-ui/react-dialog`, `-dropdown-menu`, `-tooltip`, `-popover`, `-tabs`, `-select`, `-toast` | runtime | accessible behaviour primitives (D2) |
+| `@radix-ui/react-dialog`, `-dropdown-menu`, `-tooltip`, `-popover`, `-tabs`, `-toast` | runtime | accessible behaviour primitives (D2); `-select` was removed in Phase 4 in favour of a styled native `<select>` |
 | `clsx`, `tailwind-merge` | runtime, tiny | `cn()` class merging |
 | `@fontsource-variable/inter` | runtime | self-hosted font (no external CDN) |
 | `openapi-typescript` | dev | generate DTO types (D1) |

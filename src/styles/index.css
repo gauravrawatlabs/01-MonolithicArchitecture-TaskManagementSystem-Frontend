@@ -1,10 +1,77 @@
 /*
- * Global styles. Tailwind CSS v4 is configured in CSS (no tailwind.config.js):
- * @import pulls in Tailwind, @theme defines design tokens that become utility classes.
- * The full design system (colours, light/dark tokens) is added in Phase 4.
+ * Global styles. Tailwind CSS v4 is configured in CSS (there is no tailwind.config.js):
+ *   @import         loads Tailwind
+ *   @custom-variant makes `dark:` react to the .dark class on <html> (set by ThemeProvider)
+ *   @theme inline   turns our CSS variables into utilities (bg-surface, text-primary-text, …);
+ *                   "inline" keeps the var() reference so the value can change at runtime.
  */
 @import 'tailwindcss';
+@import './themes.css';
 
-@theme {
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-border: var(--border);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-text: var(--primary-text);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-soft-foreground: var(--primary-soft-foreground);
+  --color-ring: var(--ring);
+
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-hover: var(--danger-hover);
+  --color-danger-soft: var(--danger-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+
+  --color-sidebar: var(--sidebar);
+  --color-overlay: var(--overlay);
+}
+
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--color-border); /* Tailwind v4's default is currentColor */
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background font-sans text-sm text-foreground antialiased;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* One visible focus style for keyboard users everywhere; mouse clicks don't show it. */
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }

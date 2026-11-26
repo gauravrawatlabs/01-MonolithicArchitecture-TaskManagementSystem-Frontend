@@ -4,7 +4,7 @@ A React + TypeScript single-page application for the
 [Task Management System API](https://github.com/gauravrawatlabs/01-MonolithicArchitecture-TaskManagementSystem)
 (ASP.NET Core 10 Web API, monolithic architecture, SQL Server, JWT + refresh tokens, role-based authorization).
 
-> **Status: Phase 3 of 17 (project setup).** Tooling is in place; features start in Phase 4.
+> **Status: Phase 4 of 17 (design system).** `npm run dev` shows the component library; app screens start in Phase 5.
 > The project is built phase by phase as a learning project; see the [progress tracker](docs/00-Progress-Tracker.md).
 
 ## Architecture at a glance
@@ -34,6 +34,7 @@ ESLint · Prettier
 | 01 | [Requirements and UI/UX design](docs/01-Phase1-Requirements-and-UI-Design.md) | Backend contract, page inventory, journeys, wireframes, design system, role matrix, API and testing plans |
 | 02 | [Frontend architecture](docs/02-Phase2-Frontend-Architecture.md) | Component layers, folder structure, routing, state management, auth, API layer, error handling, conventions |
 | 03 | [Project setup](docs/03-Phase3-Project-Setup.md) | Tools and versions, every config file, env variables, commands, verification |
+| 04 | [Design system and common components](docs/04-Phase4-Design-System-and-Common-Components.md) | Tokens, dark mode, component catalogue, accessibility, defects found |
 
 ## Getting started
 

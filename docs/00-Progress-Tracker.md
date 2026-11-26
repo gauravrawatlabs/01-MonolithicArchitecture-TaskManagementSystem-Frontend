@@ -7,8 +7,8 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
 | 1 | Requirements and UI/UX design | **Verified** (2026-11-26) | — (design only) | Backend: 188/188 after G1/G2 | — | [01-Phase1-Requirements-and-UI-Design.md](01-Phase1-Requirements-and-UI-Design.md) |
 | 2 | Frontend architecture | **Verified** (2026-11-26) | — (design only) | — | — | [02-Phase2-Frontend-Architecture.md](02-Phase2-Frontend-Architecture.md); D1–D6 approved |
 | 3 | Project setup | **Verified** (2026-11-26) | 8 unit · 1 integration · 1 e2e (×3 viewports) | 9/9 + 3/3 | ✅ | [03-Phase3-Project-Setup.md](03-Phase3-Project-Setup.md); D7 = A (implemented) |
-| 4 | Design system and common components | Pending | | | | Waiting for approval to start |
-| 5 | Application layout and navigation | Pending | | | | |
+| 4 | Design system and common components | **Verified** (2026-11-26) | 102 unit/integration · 6 e2e (×3 viewports) | 102/102 + 18/18 | ✅ | [04-Phase4-Design-System-and-Common-Components.md](04-Phase4-Design-System-and-Common-Components.md) |
+| 5 | Application layout and navigation | Pending | | | | Waiting for approval to start |
 | 6 | Authentication UI | Pending | | | | |
 | 7 | Authentication and API integration | Pending | | | | |
 | 8 | Dashboard | Pending | | | | |
@@ -64,6 +64,22 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
 - **Tests passed:** Vitest 9/9 · Playwright 3/3.
 - **Build status:** ✅ `npm run build` (JS 91.6 kB gzip); typecheck, lint, format all clean.
 - **Decision D7 (A):** backend switched to `JsonNumberHandling.Strict` (+2 backend tests, 190/190 passing); API types regenerated, now 0 `number | string` fields.
+- **Pending issues:** none.
+- **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-26.
+
+## Phase 4 — Design system and common components
+
+- **Tasks completed:** design tokens for light/dark (WCAG AA verified by axe); Tailwind v4 theme mapping; no-flash
+  theme script + ThemeProvider (light/dark/system, live OS changes); 17 primitives, 2 form helpers, 6 feedback
+  components, DataTable + Pagination; Theme and Toast contexts; task status/priority metadata and badges;
+  design system showcase page.
+- **Files created/modified:** see [04 §4](04-Phase4-Design-System-and-Common-Components.md#4-component-catalogue).
+- **Tests written:** 15 Vitest files (102 tests), `e2e/design-system.spec.ts` (5 tests × 3 viewports).
+- **Tests passed:** Vitest 102/102 (≈ 91 % line coverage) · Playwright 18/18.
+- **Build status:** ✅ `npm run verify` passes.
+- **Defects found and fixed:** Modal focus return, 2 contrast failures, nullish-vs-OR logic, autoFocus, toggle ARIA
+  (details in 04 §5).
+- **Decision recorded:** Radix Select removed in favour of a styled native `<select>`.
 - **Pending issues:** none.
 - **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-26.
 

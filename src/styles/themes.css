@@ -1,0 +1,69 @@
+/*
+ * Design tokens (docs/01 §5.1) as CSS variables, one set per theme.
+ * Components never use raw hex colours: they use Tailwind classes generated from these tokens
+ * (bg-surface, text-muted-foreground, …), so switching the .dark class re-themes the whole app.
+ * Contrast: every text/background pair below meets WCAG AA (≥ 4.5:1) for normal text.
+ */
+:root {
+  color-scheme: light;
+
+  --background: #f6f7fb;
+  --surface: #ffffff;
+  --surface-muted: #f1f3f8;
+  --border: #e4e7ee;
+  --foreground: #111827;
+  --muted-foreground: #5b6472;
+
+  --primary: #6d4aff; /* button background; white text on it = 5.2:1 */
+  --primary-hover: #5b36f2;
+  --primary-foreground: #ffffff;
+  --primary-text: #5b36f2; /* links / primary text on surfaces */
+  --primary-soft: #f1edff;
+  --primary-soft-foreground: #4c2fd1;
+  --ring: #6d4aff;
+
+  --success: #15803d;
+  --success-soft: #dcfce7;
+  --warning: #b45309;
+  --warning-soft: #fef3c7;
+  --danger: #b91c1c; /* red-700: 5.4:1 on --danger-soft (red-600 failed axe at 3.9:1) */
+  --danger-hover: #991b1b;
+  --danger-soft: #fee2e2;
+  --info: #1d4ed8;
+  --info-soft: #dbeafe;
+
+  --sidebar: #ffffff;
+  --overlay: rgb(17 24 39 / 0.5);
+}
+
+.dark {
+  color-scheme: dark;
+
+  --background: #0e0f16;
+  --surface: #171923;
+  --surface-muted: #1f2230;
+  --border: #2a2e3d;
+  --foreground: #f3f4f6;
+  --muted-foreground: #9ca3af;
+
+  --primary: #6d4aff; /* kept: white text on a lighter violet would fail contrast */
+  --primary-hover: #7c5cff;
+  --primary-foreground: #ffffff;
+  --primary-text: #a78bfa;
+  --primary-soft: #2a2250;
+  --primary-soft-foreground: #c4b5fd;
+  --ring: #8b6cff;
+
+  --success: #4ade80;
+  --success-soft: #052e1a;
+  --warning: #fbbf24;
+  --warning-soft: #3a2606;
+  --danger: #f87171;
+  --danger-hover: #ef4444;
+  --danger-soft: #3b0d0d;
+  --info: #60a5fa;
+  --info-soft: #0b2547;
+
+  --sidebar: #1a1530;
+  --overlay: rgb(0 0 0 / 0.65);
+}
