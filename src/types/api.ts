@@ -11,3 +11,4 @@ type Schemas = components['schemas'];
 export type TaskItemStatus = Schemas['TaskItemStatus'];
 export type TaskPriority = Schemas['TaskPriority'];
 export type SortDirection = NonNullable<Schemas['SortDirection']>;
+export type UserProfile = Schemas['UserProfileResponse'];

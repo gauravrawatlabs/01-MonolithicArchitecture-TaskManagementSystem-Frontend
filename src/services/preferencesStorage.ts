@@ -32,3 +32,22 @@ export function writeThemePreference(preference: ThemePreference): void {
     // Storage unavailable: the choice still applies for this visit.
   }
 }
+
+export const SIDEBAR_STORAGE_KEY = 'tms.sidebar';
+
+/** Desktop sidebar: true = collapsed to the icon rail. Defaults to expanded. */
+export function readSidebarCollapsed(): boolean {
+  try {
+    return window.localStorage.getItem(SIDEBAR_STORAGE_KEY) === 'collapsed';
+  } catch {
+    return false;
+  }
+}
+
+export function writeSidebarCollapsed(collapsed: boolean): void {
+  try {
+    window.localStorage.setItem(SIDEBAR_STORAGE_KEY, collapsed ? 'collapsed' : 'expanded');
+  } catch {
+    // Storage unavailable: the choice still applies for this visit.
+  }
+}

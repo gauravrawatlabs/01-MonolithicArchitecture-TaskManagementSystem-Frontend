@@ -14,18 +14,21 @@ export interface AvatarProps {
   name: string;
   size?: AvatarSize;
   className?: string;
+  /**
+   * Hide from assistive technology when the name is already given next to it (or by a parent's
+   * label). Prevents screen readers announcing the same name twice.
+   */
+  decorative?: boolean;
 }
 
 /**
  * Initials avatar (the backend has no profile photos). The colour is derived from the name,
  * so the same person always looks the same. The full name is exposed to assistive technology.
  */
-export function Avatar({ name, size = 'sm', className }: AvatarProps) {
+export function Avatar({ name, size = 'sm', className, decorative = false }: AvatarProps) {
   return (
     <span
-      role="img"
-      aria-label={name}
-      title={name}
+      {...(decorative ? { 'aria-hidden': true } : { role: 'img', 'aria-label': name, title: name })}
       className={cn(
         'inline-flex shrink-0 items-center justify-center rounded-full font-semibold select-none',
         sizes[size],

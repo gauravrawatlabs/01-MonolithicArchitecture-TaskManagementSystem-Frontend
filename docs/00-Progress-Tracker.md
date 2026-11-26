@@ -8,8 +8,8 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
 | 2 | Frontend architecture | **Verified** (2026-11-26) | — (design only) | — | — | [02-Phase2-Frontend-Architecture.md](02-Phase2-Frontend-Architecture.md); D1–D6 approved |
 | 3 | Project setup | **Verified** (2026-11-26) | 8 unit · 1 integration · 1 e2e (×3 viewports) | 9/9 + 3/3 | ✅ | [03-Phase3-Project-Setup.md](03-Phase3-Project-Setup.md); D7 = A (implemented) |
 | 4 | Design system and common components | **Verified** (2026-11-26) | 102 unit/integration · 6 e2e (×3 viewports) | 102/102 + 18/18 | ✅ | [04-Phase4-Design-System-and-Common-Components.md](04-Phase4-Design-System-and-Common-Components.md) |
-| 5 | Application layout and navigation | Pending | | | | Waiting for approval to start |
-| 6 | Authentication UI | Pending | | | | |
+| 5 | Application layout and navigation | **Verified** (2026-11-26) | 52 new Vitest (154 total) · 13 e2e ×3 | 154/154 + 39/39 | ✅ | [05-Phase5-Layout-and-Navigation.md](05-Phase5-Layout-and-Navigation.md) |
+| 6 | Authentication UI | Pending | | | | Waiting for approval to start |
 | 7 | Authentication and API integration | Pending | | | | |
 | 8 | Dashboard | Pending | | | | |
 | 9 | Category management | Pending | | | | |
@@ -83,3 +83,18 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
 - **Pending issues:** none.
 - **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-26.
 
+## Phase 5 — Application layout and navigation
+
+- **Tasks completed:** full route tree with lazy pages (one chunk per page); RequireAuth / RequireGuest /
+  RequireRole guards; open-redirect-safe returnUrl; responsive shell (drawer / rail / collapsible sidebar);
+  top bar, breadcrumbs, page titles, skip link, user menu, verify-email banner; 404/403/route-error pages;
+  placeholders for every page in the Phase 1 inventory; AuthProvider with its final interface plus a
+  TEMPORARY development-only preview sign-in (removed in Phase 7).
+- **Files created/modified:** see [05 §3](05-Phase5-Layout-and-Navigation.md#3-files).
+- **Tests written:** 52 Vitest tests (navigation 24, returnUrl 13, permissions 9, routes 3, useMediaQuery 2, app 1); 7 new e2e tests.
+- **Tests passed:** Vitest 154/154 (stable over 5 runs) · Playwright 39/39.
+- **Build status:** ✅ `npm run verify`; production bundle verified free of dev-only code.
+- **Defects found and fixed:** shared route objects, duplicate 404 heading, Label-in-Name, dev code in prod, a Phase 4 report file committed by mistake (details in 05 §4).
+- **Known follow-up:** main bundle 183.5 kB gzip, to be measured and reduced in Phase 16.
+- **Pending issues:** none.
+- **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-26.

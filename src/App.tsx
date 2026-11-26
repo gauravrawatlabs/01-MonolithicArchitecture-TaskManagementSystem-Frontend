@@ -1,17 +1,13 @@
-import { AppProviders } from '@/app/providers/AppProviders';
-import { ErrorBoundary } from '@/components/feedback/ErrorBoundary';
-import { DesignSystemPage } from '@/features/design-system';
+import { RouterProvider } from 'react-router/dom';
 
-/**
- * Root component. Until routing arrives in Phase 5, it shows the design system showcase
- * (later available at /design-system in development builds).
- */
+import { AppProviders } from '@/app/providers/AppProviders';
+import { router } from '@/app/router/router';
+
+/** Root component: app-wide providers around the router. Everything else is a route. */
 export function App() {
   return (
     <AppProviders>
-      <ErrorBoundary>
-        <DesignSystemPage />
-      </ErrorBoundary>
+      <RouterProvider router={router} />
     </AppProviders>
   );
 }

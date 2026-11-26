@@ -120,6 +120,15 @@ export default defineConfig([
     },
   },
 
+  // The router is the wiring layer: it may import feature PAGES directly so each page becomes
+  // its own lazily loaded chunk. Feature index files export only what other features need.
+  {
+    files: ['src/app/router/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': ['error', { patterns: [noDeepRelative] }],
+    },
+  },
+
   // Plain JavaScript config files (this file): no type information.
   {
     files: ['**/*.js'],

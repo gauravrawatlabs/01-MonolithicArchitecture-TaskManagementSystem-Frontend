@@ -168,7 +168,7 @@ A custom picker (Popover-based) will be built only if a feature needs rich optio
 | `src/types/api.ts` | first aliases over generated DTOs: `TaskItemStatus`, `TaskPriority`, `SortDirection` |
 | `src/constants/taskMeta.ts` | labels/icons/colours for statuses and priorities, workflow order |
 | `src/features/tasks/components/StatusBadge.tsx`, `PriorityBadge.tsx`, `features/tasks/index.ts` | task badges; they know what a task is, so they live in the feature and are exported through its public API |
-| `src/features/design-system/` | the showcase page (moves to a dev-only `/design-system` route in Phase 5) |
+| `src/features/design-system/` | the showcase page (since Phase 5: the dev-only, standalone `/design-system` route) |
 | `src/app/providers/AppProviders.tsx` | Theme + Toast providers (Query and Auth join in Phase 7) |
 
 ## 5. Problems found and fixed in this phase

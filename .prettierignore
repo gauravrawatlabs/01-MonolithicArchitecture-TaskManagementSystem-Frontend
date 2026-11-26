@@ -3,6 +3,7 @@ coverage
 node_modules
 playwright-report
 test-results
+.vitest
 package-lock.json
 # Hand-written docs contain ASCII diagrams and aligned tables; keep them as written.
 *.md

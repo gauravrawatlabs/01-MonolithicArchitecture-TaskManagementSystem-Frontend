@@ -1,3 +1,6 @@
-/** Public API of the tasks feature. Other features import from '@/features/tasks' only. */
+/**
+ * Public API of the tasks feature: what OTHER features may use. Pages are not exported here;
+ * the router imports them directly so each page becomes its own lazily loaded chunk.
+ */
 export { PriorityBadge } from './components/PriorityBadge';
 export { StatusBadge } from './components/StatusBadge';
