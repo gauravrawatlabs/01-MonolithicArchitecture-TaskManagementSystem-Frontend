@@ -15,19 +15,30 @@ import {
 /**
  * One typed function per backend endpoint (AuthController + AccountController).
  * No React, no toasts: just HTTP. Errors arrive as ApiError (see api/client.ts).
+ * POST /api/auth/refresh lives in src/api/session.ts (session infrastructure, not a feature call).
+ *
+ * `skipAuthRefresh`: a 401 from these endpoints means "wrong credentials" or "not signed in",
+ * not "access token expired", so the interceptor must not refresh and retry.
  */
+const noRefresh = { skipAuthRefresh: true } as const;
+
 export const authApi = {
   /** 200 AuthResponse · 401 invalid credentials / locked / inactive */
   login: async (body: LoginRequest) =>
-    (await apiClient.post<AuthResponse>('/api/auth/login', body)).data,
+    (await apiClient.post<AuthResponse>('/api/auth/login', body, noRefresh)).data,
 
   /** 201 UserProfileResponse (no tokens) · 400 validation · 409 email already registered */
   register: async (body: RegisterRequest) =>
-    (await apiClient.post<UserProfile>('/api/auth/register', body)).data,
+    (await apiClient.post<UserProfile>('/api/auth/register', body, noRefresh)).data,
 
   /** 204 · also for unknown or already revoked tokens */
   logout: async (body: RefreshTokenRequest) => {
-    await apiClient.post('/api/auth/logout', body);
+    await apiClient.post('/api/auth/logout', body, noRefresh);
+  },
+
+  /** 204 · revokes every refresh token of the signed-in user (all devices) · 401 */
+  logoutAll: async () => {
+    await apiClient.post('/api/auth/logout-all');
   },
 
   /** 200 UserProfileResponse · 401 */

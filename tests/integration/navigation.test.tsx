@@ -24,10 +24,12 @@ describe('Route guards', () => {
     expect(currentUrl(router)).toBe('/login?returnUrl=%2Fprojects%2F12%2Fboard');
   });
 
-  it('returns to that page after signing in (development preview)', async () => {
+  it('returns to that page after signing in', async () => {
     const { router, user } = renderRoute('/projects/12/board');
 
-    await user.click(await screen.findByRole('button', { name: 'Continue as Manager' }));
+    await user.type(await screen.findByLabelText('Email'), 'max@example.test');
+    await user.type(screen.getByLabelText('Password'), 'Str0ng!Pass');
+    await user.click(screen.getByRole('button', { name: 'Sign in' }));
 
     expect(
       await screen.findByRole('heading', { level: 1, name: 'Project #12' }),

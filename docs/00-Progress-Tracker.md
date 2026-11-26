@@ -10,8 +10,8 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
 | 4 | Design system and common components | **Verified** (2026-11-26) | 102 unit/integration · 6 e2e (×3 viewports) | 102/102 + 18/18 | ✅ | [04-Phase4-Design-System-and-Common-Components.md](04-Phase4-Design-System-and-Common-Components.md) |
 | 5 | Application layout and navigation | **Verified** (2026-11-26) | 52 new Vitest (154 total) · 13 e2e ×3 | 154/154 + 39/39 | ✅ | [05-Phase5-Layout-and-Navigation.md](05-Phase5-Layout-and-Navigation.md) |
 | 6 | Authentication UI | **Verified** (2026-11-26) | 89 new Vitest (243 total) · 10 e2e ×3 · 1 real-API flow | 243/243 + 69/69 + 1/1 | ✅ | [06-Phase6-Authentication-UI.md](06-Phase6-Authentication-UI.md) |
-| 7 | Authentication and API integration | Pending | | | | Waiting for approval to start |
-| 8 | Dashboard | Pending | | | | |
+| 7 | Authentication and API integration | **Verified** (2026-11-26) | 38 new Vitest (281 total) · 3 e2e ×3 · 1 real-API session flow | 281/281 + 78/78 + 2/2 | ✅ | [07-Phase7-Sessions-and-API-Integration.md](07-Phase7-Sessions-and-API-Integration.md) |
+| 8 | Dashboard | Pending | | | | Waiting for approval to start |
 | 9 | Category management | Pending | | | | |
 | 10 | Project management | Pending | | | | |
 | 11 | Task management | Pending | | | | |
@@ -114,4 +114,23 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
   label, jsdom CORS (fetch adapter), invalid `<ul>` in `<p>` (details in 06 §4).
 - **Known follow-up:** main bundle 229.7 kB gzip (Phase 16). Real-API e2e adds one test user per run to the dev database.
 - **Pending issues:** none.
+- **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-26.
+
+## Phase 7 — Authentication and API integration
+
+- **Tasks completed:** persistent sessions (refresh token in localStorage, access token in memory); silent
+  startup restore; 401 → refresh → retry once (single-flight); proactive refresh before expiry; cross-tab
+  Web Lock with re-read (no reuse revocation); cross-tab sign-out/sign-in; session-expired handling with
+  returnUrl; offline startup with retry; email verification takes effect via token refresh; sign out of all
+  devices; preview accounts removed.
+- **Files created/modified:** see [07 §4](07-Phase7-Sessions-and-API-Integration.md#4-files).
+- **Tests written:** 38 Vitest tests (25 unit, 13 integration); `e2e/session.spec.ts` (3 × 3); UI e2e migrated
+  off preview accounts; real-API `e2e/backend/session.backend.spec.ts`.
+- **Tests passed:** Vitest 281/281 (stable ×3) · Playwright UI 78/78 · real API 2/2.
+- **Build status:** ✅ `npm run verify`.
+- **Defects found and fixed:** `setTimeout` overflow causing immediate refresh, E2E fill race on lazy pages,
+  Web Locks typing, navigator stub (details in 07 §5).
+- **Design correction:** Phase 1's "adopt rotated tokens" → "serialize and re-read" (07 §3.2).
+- **Pending issues:** none. Real-API e2e adds test users to the dev database; it ran against the owner's
+  Visual Studio debug session.
 - **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-26.

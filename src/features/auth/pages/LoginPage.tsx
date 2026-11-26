@@ -13,23 +13,26 @@ import { applyServerErrors } from '@/utils/formErrors';
 
 import { AuthPageHeader } from '../components/AuthPageHeader';
 import { useLoginMutation } from '../hooks/useAuthMutations';
-import { type PreviewAccount } from '../previewUsers';
 import { loginSchema, type LoginFormValues } from '../schemas/authSchemas';
-import { readLoginNotice } from '../types';
-import { useAuth } from '../useAuth';
+import { type LoginNotice, readLoginNotice } from '../types';
 
-const NOTICES = {
-  passwordReset: 'Your password has been reset. Sign in with your new password.',
-  passwordChanged:
-    'Your password was changed and you were signed out everywhere. Please sign in again.',
-} as const;
-
-const PREVIEW_ACCOUNTS: { account: PreviewAccount; label: string }[] = [
-  { account: 'admin', label: 'Admin' },
-  { account: 'manager', label: 'Manager' },
-  { account: 'user', label: 'User' },
-  { account: 'unverified', label: 'User (email not verified)' },
-];
+/** Messages for the sign-in page after a redirect; the tone matches what happened. */
+const NOTICES: Record<LoginNotice, { variant: 'success' | 'info' | 'warning'; text: string }> = {
+  passwordReset: {
+    variant: 'success',
+    text: 'Your password has been reset. Sign in with your new password.',
+  },
+  passwordChanged: {
+    variant: 'success',
+    text: 'Your password was changed and you were signed out everywhere. Please sign in again.',
+  },
+  sessionExpired: {
+    variant: 'warning',
+    text: 'Your session has expired. Sign in again to continue where you left off.',
+  },
+  signedOutElsewhere: { variant: 'info', text: 'You signed out in another tab.' },
+  signedOutEverywhere: { variant: 'success', text: 'You were signed out on all devices.' },
+};
 
 /**
  * POST /api/auth/login. On success the tokens and user are stored (useLoginMutation), and
@@ -39,7 +42,6 @@ const PREVIEW_ACCOUNTS: { account: PreviewAccount; label: string }[] = [
 export function LoginPage() {
   const location = useLocation();
   const notice = readLoginNotice(location.state);
-  const { previewSignIn } = useAuth();
   const login = useLoginMutation();
   const {
     register,
@@ -63,7 +65,9 @@ export function LoginPage() {
     <>
       <AuthPageHeader title="Welcome back" description="Sign in to your workspace." />
 
-      {notice ? <Banner variant="success" title={NOTICES[notice]} className="mb-4" /> : null}
+      {notice ? (
+        <Banner variant={NOTICES[notice].variant} title={NOTICES[notice].text} className="mb-4" />
+      ) : null}
       <FormErrorSummary title="Sign in failed" message={errors.root?.server?.message} />
 
       <form noValidate onSubmit={submit} className="grid gap-4">
@@ -96,35 +100,6 @@ export function LoginPage() {
           Create one
         </Link>
       </p>
-
-      {/* TEMPORARY (until Phase 7). import.meta.env.DEV is a build-time constant: removed from production. */}
-      {import.meta.env.DEV && previewSignIn ? (
-        <section
-          aria-labelledby="preview-heading"
-          className="mt-8 rounded-xl border border-dashed p-4"
-        >
-          <h2 id="preview-heading" className="text-sm font-semibold">
-            Development preview
-          </h2>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Explore the UI without the backend. No API call is made, so pages that load data will
-            fail; reloading signs you out. Removed in Phase 7.
-          </p>
-          <div className="mt-3 grid gap-2">
-            {PREVIEW_ACCOUNTS.map(({ account, label }) => (
-              <Button
-                key={account}
-                variant="secondary"
-                onClick={() => {
-                  previewSignIn(account);
-                }}
-              >
-                Continue as {label}
-              </Button>
-            ))}
-          </div>
-        </section>
-      ) : null}
     </>
   );
 }

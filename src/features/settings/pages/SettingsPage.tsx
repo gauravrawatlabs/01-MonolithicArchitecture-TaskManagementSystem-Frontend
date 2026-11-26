@@ -5,7 +5,7 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { PagePlaceholder } from '@/components/layout/PagePlaceholder';
 import { TabNav } from '@/components/layout/TabNav';
 import { paths, SETTINGS_TABS, type SettingsTab } from '@/constants/routes';
-import { ChangePasswordForm } from '@/features/auth';
+import { ChangePasswordForm, SessionsCard } from '@/features/auth';
 
 const TAB_LABELS: Record<SettingsTab, string> = {
   account: 'Account',
@@ -51,6 +51,9 @@ export function SettingsPage() {
             <ChangePasswordForm />
           </CardContent>
         </Card>
+        <div className="mt-6">
+          <SessionsCard />
+        </div>
       </>
     );
   }

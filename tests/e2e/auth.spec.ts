@@ -1,37 +1,7 @@
-import { expect, type Page, test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 import { expectNoAccessibilityViolations } from './support/accessibility';
-
-const API = 'http://localhost:5075';
-
-/**
- * Fakes one API endpoint in the real browser. The headers matter: the browser applies CORS to
- * these responses exactly as it would to the real API (which allows http://localhost:3000).
- */
-async function fakeApi(page: Page, path: string, status: number, body?: unknown) {
-  await page.route(`${API}${path}`, async (route) => {
-    if (route.request().method() === 'OPTIONS') {
-      await route.fulfill({
-        status: 204,
-        headers: {
-          'Access-Control-Allow-Origin': 'http://localhost:3000',
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-        },
-      });
-      return;
-    }
-    await route.fulfill({
-      status,
-      contentType: 'application/problem+json',
-      headers: {
-        'Access-Control-Allow-Origin': 'http://localhost:3000',
-        'Access-Control-Expose-Headers': 'X-Correlation-ID',
-      },
-      body: body === undefined ? '' : JSON.stringify(body),
-    });
-  });
-}
+import { fakeApi } from './support/fakeApi';
 
 test.describe('Authentication pages', () => {
   test('login: browser-side validation, then one generic message for wrong credentials', async ({

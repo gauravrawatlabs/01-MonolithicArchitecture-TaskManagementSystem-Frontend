@@ -7,8 +7,8 @@ import { readEmailLink } from '../support/emails';
  * Requires: backend on http://localhost:5075 in Development (emails written to its pickup folder).
  * Creates a unique e2e-…@example.test user in the backend's development database.
  *
- * Phase 6 keeps the session in memory, so the test moves around by clicking (a full page load
- * would sign out). Phase 7 adds persistence.
+ * Pages are lazy-loaded: after every navigation, wait for the NEW page's heading before filling
+ * fields, or `fill` may type into a field of the page that is still on screen.
  */
 const PASSWORD = 'E2e!Passw0rd';
 const NEW_PASSWORD = 'E2e!N3wPassword';
@@ -41,6 +41,7 @@ test('register → confirm email → sign in → change password → sign in aga
 
   // 3. Sign in: verified account, no banner
   await page.getByRole('link', { name: 'Sign in' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Welcome back' })).toBeVisible();
   await signIn(page, email, PASSWORD);
   await expect(page.getByRole('heading', { level: 1, name: 'Dashboard' })).toBeVisible();
   await expect(page.getByText('Please verify your email address')).toHaveCount(0);
@@ -74,11 +75,17 @@ test('register → confirm email → sign in → change password → sign in aga
   await page.getByRole('button', { name: 'Account menu for Erin Endtoend' }).click();
   await page.getByRole('menuitem', { name: 'Sign out' }).click();
   await page.getByRole('link', { name: 'Forgot password?' }).click();
+  await expect(
+    page.getByRole('heading', { level: 1, name: 'Forgot your password?' }),
+  ).toBeVisible();
   await page.getByLabel('Email').fill(email);
   await page.getByRole('button', { name: 'Send reset link' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Check your email' })).toBeVisible();
 
   await page.goto(await readEmailLink(email, '/reset-password'));
+  await expect(
+    page.getByRole('heading', { level: 1, name: 'Choose a new password' }),
+  ).toBeVisible();
   await page.getByLabel('New password', { exact: true }).fill(PASSWORD);
   await page.getByLabel('Confirm new password').fill(PASSWORD);
   await page.getByRole('button', { name: 'Reset password' }).click();

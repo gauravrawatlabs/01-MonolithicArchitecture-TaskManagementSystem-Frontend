@@ -4,6 +4,9 @@ import { describe, expect, it } from 'vitest';
 
 import { apiUrl, problem } from '../../mocks/api';
 import { captureRequests } from '../../mocks/capture';
+import { setSession } from '@/services/tokenStorage';
+
+import { buildAuthResponse } from '../../mocks/factories/auth';
 import { buildUser } from '../../mocks/factories/users';
 import { server } from '../../mocks/server';
 import { currentUrl, renderRoute } from '../../utils/renderRoute';
@@ -92,20 +95,20 @@ describe('Confirm email (link from email)', () => {
     expect(attempts).toBe(2);
   });
 
-  it('refreshes the signed-in user so the "verify your email" banner disappears', async () => {
-    server.use(
-      http.get(apiUrl('/api/auth/me'), () =>
-        HttpResponse.json(buildUser({ firstName: 'Nina', emailConfirmed: true })),
-      ),
+  it('gets a new token for a signed-in user, so "verified" takes effect and the banner disappears', async () => {
+    // The old access token says email_verified=false; only a refresh issues one that says true.
+    const unverified = buildUser({ firstName: 'Nina', emailConfirmed: false });
+    setSession(buildAuthResponse(unverified, { refreshToken: 'stored-refresh' }));
+    const refreshCalls = captureRequests('post', '/api/auth/refresh', () =>
+      HttpResponse.json(buildAuthResponse({ ...unverified, emailConfirmed: true })),
     );
-    const { user, router } = renderRoute(CONFIRM_URL, {
-      user: buildUser({ firstName: 'Nina', emailConfirmed: false }),
-    });
+    const { user, router } = renderRoute(CONFIRM_URL, { user: unverified });
 
     await user.click(await screen.findByRole('link', { name: 'Go to dashboard' }));
 
     expect(await screen.findByRole('heading', { level: 1, name: 'Dashboard' })).toBeInTheDocument();
     expect(currentUrl(router)).toBe('/dashboard');
+    expect(refreshCalls[0]?.body).toEqual({ refreshToken: 'stored-refresh' });
     expect(screen.queryByText('Please verify your email address')).not.toBeInTheDocument();
   });
 });

@@ -5,13 +5,22 @@ import { paths } from '@/constants/routes';
 import { useAuth } from '@/features/auth';
 import { getSafeReturnUrl } from '@/utils/returnUrl';
 
-/** Layout route for logged-out pages (login, register…). Already signed in → back where you came from. */
+import { SessionCheckFailedPage } from '../pages/SessionCheckFailedPage';
+
+/**
+ * Layout route for logged-out pages (login, register…). Already signed in (or a stored session
+ * was just restored) → on to the safe returnUrl, or the dashboard.
+ */
 export function RequireGuest() {
-  const { status } = useAuth();
+  const { status, sessionCheckFailed } = useAuth();
   const [searchParams] = useSearchParams();
 
   if (status === 'initializing') {
-    return <PageLoader label="Checking your session" />;
+    return sessionCheckFailed ? (
+      <SessionCheckFailedPage />
+    ) : (
+      <PageLoader label="Checking your session" />
+    );
   }
   if (status === 'authenticated') {
     return (

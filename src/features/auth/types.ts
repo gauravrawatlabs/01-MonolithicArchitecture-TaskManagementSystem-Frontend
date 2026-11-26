@@ -1,5 +1,18 @@
 /** One-time messages shown on the sign-in page after a redirect (passed in router state). */
-export type LoginNotice = 'passwordReset' | 'passwordChanged';
+export type LoginNotice =
+  | 'passwordReset'
+  | 'passwordChanged'
+  | 'sessionExpired'
+  | 'signedOutElsewhere'
+  | 'signedOutEverywhere';
+
+const LOGIN_NOTICES: readonly LoginNotice[] = [
+  'passwordReset',
+  'passwordChanged',
+  'sessionExpired',
+  'signedOutElsewhere',
+  'signedOutEverywhere',
+];
 
 export interface LoginLocationState {
   notice?: LoginNotice;
@@ -13,7 +26,7 @@ export interface RegisterSuccessLocationState {
 export function readLoginNotice(state: unknown): LoginNotice | undefined {
   if (typeof state !== 'object' || state === null || !('notice' in state)) return undefined;
   const { notice } = state;
-  return notice === 'passwordReset' || notice === 'passwordChanged' ? notice : undefined;
+  return LOGIN_NOTICES.find((value) => value === notice);
 }
 
 export function readRegisteredEmail(state: unknown): string | undefined {

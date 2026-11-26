@@ -1,5 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { refreshSession } from '@/api/session';
+
 import { type LoginRequest, type RegisterRequest } from '@/types/api';
 
 import { accountApi, authApi } from '../api/authApi';
@@ -36,14 +38,18 @@ export function useResetPasswordMutation() {
   return useMutation({ mutationFn: accountApi.resetPassword });
 }
 
-/** If someone is signed in while confirming, reload their profile so the "verify" banner disappears. */
+/**
+ * If someone is signed in while confirming, get a NEW token pair: the old access token still says
+ * email_verified=false, so write actions would get 403 until it expired. The refreshed user also
+ * makes the "verify your email" banner disappear.
+ */
 export function useConfirmEmailMutation() {
-  const { status, refreshProfile } = useAuth();
+  const { status } = useAuth();
   return useMutation({
     mutationFn: accountApi.confirmEmail,
     onSuccess: async () => {
       if (status === 'authenticated') {
-        await refreshProfile().catch(() => undefined);
+        await refreshSession().catch(() => undefined);
       }
     },
   });
@@ -52,4 +58,13 @@ export function useConfirmEmailMutation() {
 /** Success revokes every session on the server, so the caller signs out locally too. */
 export function useChangePasswordMutation() {
   return useMutation({ mutationFn: accountApi.changePassword });
+}
+
+/** Revokes every session of this user (all browsers and devices), then signs out here. */
+export function useLogoutAllMutation() {
+  const { signOut } = useAuth();
+  return useMutation({
+    mutationFn: authApi.logoutAll,
+    onSuccess: () => signOut({ notice: 'signedOutEverywhere' }),
+  });
 }

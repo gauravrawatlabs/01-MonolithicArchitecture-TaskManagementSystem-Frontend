@@ -13,7 +13,9 @@ export const authHandlers = [
   http.post(apiUrl('/api/auth/register'), () =>
     HttpResponse.json(buildUser({ emailConfirmed: false }), { status: 201 }),
   ),
+  http.post(apiUrl('/api/auth/refresh'), () => HttpResponse.json(buildAuthResponse())),
   http.post(apiUrl('/api/auth/logout'), () => new HttpResponse(null, { status: 204 })),
+  http.post(apiUrl('/api/auth/logout-all'), () => new HttpResponse(null, { status: 204 })),
   http.get(apiUrl('/api/auth/me'), () => HttpResponse.json(buildUser())),
   http.post(apiUrl('/api/account/confirm-email'), () => new HttpResponse(null, { status: 204 })),
   http.post(

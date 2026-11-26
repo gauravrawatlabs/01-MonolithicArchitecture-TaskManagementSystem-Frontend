@@ -30,7 +30,14 @@ export default defineConfig({
     },
     { name: 'mobile', testIgnore: '**/*.backend.spec.ts', use: { ...devices['Pixel 7'] } },
     // Full flows against the REAL ASP.NET Core API (must be running): npm run test:e2e:backend
-    { name: 'backend', testMatch: '**/*.backend.spec.ts', use: { ...devices['Desktop Chrome'] } },
+    // A real backend (debug build, real database, exceptions for 401/400) answers far slower than a
+    // fake, so assertions there may wait up to 15 s instead of the default 5 s.
+    {
+      name: 'backend',
+      testMatch: '**/*.backend.spec.ts',
+      expect: { timeout: 15_000 },
+      use: { ...devices['Desktop Chrome'] },
+    },
   ],
   webServer: {
     command: 'npm run dev',

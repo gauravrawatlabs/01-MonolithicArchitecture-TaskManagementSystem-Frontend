@@ -5,6 +5,7 @@
 export { type AuthContextValue, type AuthStatus, type EndedSession } from './authContext';
 export { AuthProvider } from './AuthProvider';
 export { ChangePasswordForm } from './components/ChangePasswordForm';
+export { SessionsCard } from './components/SessionsCard';
 export {
   canCreateProjects,
   canManageCategories,

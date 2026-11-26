@@ -1,9 +1,8 @@
 import axios from 'axios';
 
 import { env } from '@/constants/env';
-import { getAccessToken } from '@/services/tokenStorage';
 
-import { toApiError } from './apiError';
+import { installAuthInterceptors } from './interceptors';
 
 /**
  * The single Axios instance for the ASP.NET Core API (docs/02 §7.1).
@@ -19,17 +18,4 @@ export const apiClient = axios.create({
   headers: { Accept: 'application/json' },
 });
 
-// Request: attach the access token. Phase 7 adds 401 → refresh → retry next to this.
-apiClient.interceptors.request.use((config) => {
-  const token = getAccessToken();
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
-// Response: every failure becomes an ApiError, so callers handle one error shape.
-apiClient.interceptors.response.use(
-  (response) => response,
-  (error: unknown) => Promise.reject(toApiError(error)),
-);
+installAuthInterceptors(apiClient);
