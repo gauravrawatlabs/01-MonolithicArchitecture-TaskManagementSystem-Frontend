@@ -5,8 +5,8 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
 | # | Phase | Status | Tests written | Tests passed | Build | Notes |
 |---|---|---|---|---|---|---|
 | 1 | Requirements and UI/UX design | **Verified** (2026-11-26) | — (design only) | Backend: 188/188 after G1/G2 | — | [01-Phase1-Requirements-and-UI-Design.md](01-Phase1-Requirements-and-UI-Design.md) |
-| 2 | Frontend architecture | Pending | | | | Waiting for approval to start |
-| 3 | Project setup | Pending | | | | |
+| 2 | Frontend architecture | **Verified** (2026-11-26) | — (design only) | — | — | [02-Phase2-Frontend-Architecture.md](02-Phase2-Frontend-Architecture.md); D1–D6 approved |
+| 3 | Project setup | Pending | | | | Waiting for approval to start |
 | 4 | Design system and common components | Pending | | | | |
 | 5 | Application layout and navigation | Pending | | | | |
 | 6 | Authentication UI | Pending | | | | |
@@ -37,5 +37,18 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
   - G2: `openTaskCount`, `doneTaskCount`, `completionPercent` on `GET /api/projects` items.
   - +21 backend tests; backend total 151 unit + 37 integration, all passing.
 - **Files created:** `README.md`, `.gitignore`, `docs/00-Progress-Tracker.md`, `docs/01-Phase1-Requirements-and-UI-Design.md`
+- **Pending issues:** none.
+- **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-26.
+
+## Phase 2 — Frontend architecture
+
+- **Tasks completed:** React and component architecture explained; feature-first folder structure with the
+  responsibility of every folder and important file; dependency rules; routing strategy (route tree, guards,
+  lazy loading, URL state, safe `returnUrl`); state management (5 kinds of state, decision flow); authentication
+  architecture (status machine, single-flight + cross-tab refresh); API layer (generated types, query keys,
+  mutation patterns, `ApiError`); reusable component, forms, error handling, testing and convention rules.
+- **Decisions approved:** D1 generated OpenAPI types · D2 Radix UI primitives · D3 extra packages ·
+  D4 feature-first + ESLint boundaries · D5 TanStack Query as the only data cache · D6 `tests/unit|integration|e2e`.
+- **Files created/modified:** `docs/02-Phase2-Frontend-Architecture.md`, `docs/00-Progress-Tracker.md`, `README.md`
 - **Pending issues:** none.
 - **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-26.

@@ -32,6 +32,7 @@ ESLint · Prettier
 |---|---|---|
 | 00 | [Progress tracker](docs/00-Progress-Tracker.md) | Status of all 17 phases |
 | 01 | [Requirements and UI/UX design](docs/01-Phase1-Requirements-and-UI-Design.md) | Backend contract, page inventory, journeys, wireframes, design system, role matrix, API and testing plans |
+| 02 | [Frontend architecture](docs/02-Phase2-Frontend-Architecture.md) | Component layers, folder structure, routing, state management, auth, API layer, error handling, conventions |
 
 ## Local development (from Phase 3)
 
