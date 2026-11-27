@@ -41,6 +41,9 @@ export default defineConfig(({ command, mode }) => {
       setupFiles: ['./tests/setup/vitest.setup.ts'],
       include: ['tests/unit/**/*.test.{ts,tsx}', 'tests/integration/**/*.test.{ts,tsx}'],
       restoreMocks: true,
+      // Integration tests load real lazy pages; the first import of a heavy dependency (Recharts) can take
+      // several seconds when many workers start at once. A test still ends as soon as it passes.
+      testTimeout: 15_000,
       coverage: {
         provider: 'v8',
         include: ['src/**/*.{ts,tsx}'],

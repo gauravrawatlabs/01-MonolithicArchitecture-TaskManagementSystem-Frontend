@@ -11,8 +11,8 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
 | 5 | Application layout and navigation | **Verified** (2026-11-26) | 52 new Vitest (154 total) · 13 e2e ×3 | 154/154 + 39/39 | ✅ | [05-Phase5-Layout-and-Navigation.md](05-Phase5-Layout-and-Navigation.md) |
 | 6 | Authentication UI | **Verified** (2026-11-26) | 89 new Vitest (243 total) · 10 e2e ×3 · 1 real-API flow | 243/243 + 69/69 + 1/1 | ✅ | [06-Phase6-Authentication-UI.md](06-Phase6-Authentication-UI.md) |
 | 7 | Authentication and API integration | **Verified** (2026-11-26) | 38 new Vitest (281 total) · 3 e2e ×3 · 1 real-API session flow | 281/281 + 78/78 + 2/2 | ✅ | [07-Phase7-Sessions-and-API-Integration.md](07-Phase7-Sessions-and-API-Integration.md) |
-| 8 | Dashboard | Pending | | | | Waiting for approval to start |
-| 9 | Category management | Pending | | | | |
+| 8 | Dashboard | **Verified** (2026-11-27) | 37 new Vitest (318 total) · 5 e2e ×3 · 1 real-API | 318/318 + 93/93 + 3/3 | ✅ | [08-Phase8-Dashboard.md](08-Phase8-Dashboard.md) |
+| 9 | Category management | Pending | | | | Waiting for approval to start |
 | 10 | Project management | Pending | | | | |
 | 11 | Task management | Pending | | | | |
 | 12 | Kanban board and comments | Pending | | | | |
@@ -134,3 +134,19 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
 - **Pending issues:** none. Real-API e2e adds test users to the dev database; it ran against the owner's
   Visual Studio debug session.
 - **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-26.
+
+## Phase 8 — Dashboard
+
+- **Tasks completed:** KPI row, tasks by status / priority (single-hue horizontal bars, validated color, table view,
+  keyboard tooltips), project progress meter list, upcoming deadlines, my overdue tasks, recently updated; loading,
+  empty (per role), error and partial-error states; refresh; first TanStack Query reads (dashboard + tasks) with
+  key factories; `Intl` date/number utilities; charts lazy-loaded.
+- **Files created/modified:** see [08 §5](08-Phase8-Dashboard.md#5-files).
+- **Tests written:** 37 Vitest tests (26 unit, 11 integration); `e2e/dashboard.spec.ts` (5 × 3); real-API dashboard spec.
+- **Tests passed:** Vitest 318/318 (stable ×3, ≈ 93 % lines) · Playwright UI 93/93 · real API 3/3.
+- **Build status:** ✅ `npm run verify`; dashboard chunk 8 kB, charts chunk 116 kB (lazy), main bundle unchanged (232 kB).
+- **Defects found and fixed:** Recharts downloaded before the auth redirect, labels hidden for 1.5 s, KPI tiles
+  wrapping at 1280 px, shadowed `window` (details in 08 §6).
+- **Design change:** status donut → ordered horizontal bars (dataviz guidance, 08 §3).
+- **Pending issues:** none. Known limitation: upcoming deadlines previews 20 tasks (single-status API filter).
+- **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-27.

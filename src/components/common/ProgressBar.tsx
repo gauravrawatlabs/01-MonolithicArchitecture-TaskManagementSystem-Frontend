@@ -22,7 +22,7 @@ export function ProgressBar({ value, label, showValue = false, className }: Prog
         aria-valuemax={100}
         aria-valuenow={percent}
         aria-valuetext={display}
-        className="h-2 flex-1 overflow-hidden rounded-full bg-surface-muted"
+        className="h-2 flex-1 overflow-hidden rounded-full bg-primary-soft"
       >
         <div
           className="h-full rounded-full bg-primary transition-[width]"

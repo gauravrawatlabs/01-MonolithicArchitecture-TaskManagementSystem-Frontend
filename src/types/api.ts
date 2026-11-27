@@ -4,7 +4,7 @@
  * fields by hand: alias them here so a backend change breaks the build instead of the app.
  * More aliases are added as features need them.
  */
-import { type components } from '@/api/generated/schema';
+import { type components, type operations } from '@/api/generated/schema';
 
 type Schemas = components['schemas'];
 
@@ -23,3 +23,17 @@ export type ResendConfirmationEmailRequest = Schemas['ResendConfirmationEmailReq
 export type ForgotPasswordRequest = Schemas['ForgotPasswordRequest'];
 export type ResetPasswordRequest = Schemas['ResetPasswordRequest'];
 export type ChangePasswordRequest = Schemas['ChangePasswordRequest'];
+
+// Tasks (Phase 8+)
+export type Task = Schemas['TaskResponse'];
+export type TaskSortField = Schemas['TaskSortField'];
+export type PagedTasks = Schemas['PagedResultOfTaskResponse'];
+/**
+ * GET /api/tasks query parameters, exactly as the backend binds them (PascalCase in the OpenAPI
+ * document; ASP.NET Core binds query strings case-insensitively).
+ */
+export type TaskQuery = NonNullable<operations['Tasks_GetTasks']['parameters']['query']>;
+
+// Dashboard (Phase 8)
+export type DashboardResponse = Schemas['DashboardResponse'];
+export type ProjectProgress = Schemas['ProjectProgressResponse'];

@@ -4,8 +4,8 @@ A React + TypeScript single-page application for the
 [Task Management System API](https://github.com/gauravrawatlabs/01-MonolithicArchitecture-TaskManagementSystem)
 (ASP.NET Core 10 Web API, monolithic architecture, SQL Server, JWT + refresh tokens, role-based authorization).
 
-> **Status: Phase 7 of 17 (sessions and API integration).** Complete authentication against the API: sessions survive
-> reloads and tabs, tokens renew automatically, and expiry, cross-tab sign-out and sign-out of all devices are handled.
+> **Status: Phase 8 of 17 (dashboard).** Authentication is complete, and the dashboard shows live figures, charts and
+> task lists from the API. Feature pages (categories, projects, tasks…) follow from Phase 9.
 > The project is built phase by phase as a learning project; see the [progress tracker](docs/00-Progress-Tracker.md).
 
 ## Architecture at a glance
@@ -39,6 +39,7 @@ ESLint · Prettier
 | 05 | [Layout and navigation](docs/05-Phase5-Layout-and-Navigation.md) | Routing, lazy pages, guards, open-redirect protection, responsive shell |
 | 06 | [Authentication UI](docs/06-Phase6-Authentication-UI.md) | Forms with RHF + Zod, API client and errors, account flows, security decisions |
 | 07 | [Sessions and API integration](docs/07-Phase7-Sessions-and-API-Integration.md) | Token storage, refresh rotation, cross-tab lock, interceptors, session expiry |
+| 08 | [Dashboard](docs/08-Phase8-Dashboard.md) | TanStack Query reads, chart choice and accessibility, states, lazy charts |
 
 ## Getting started
 

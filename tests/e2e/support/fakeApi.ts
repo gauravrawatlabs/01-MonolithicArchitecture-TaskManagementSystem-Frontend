@@ -17,25 +17,29 @@ export async function fakeApi(
   status: number,
   body?: unknown,
 ): Promise<void> {
-  await page.route(`${API}${path}`, async (route) => {
-    if (route.request().method() === 'OPTIONS') {
+  // Match on the PATH only, so query strings (?SortBy=…&PageSize=…) don't matter.
+  await page.route(
+    (url) => url.origin === API && url.pathname === path,
+    async (route) => {
+      if (route.request().method() === 'OPTIONS') {
+        await route.fulfill({
+          status: 204,
+          headers: {
+            ...CORS,
+            'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          },
+        });
+        return;
+      }
       await route.fulfill({
-        status: 204,
-        headers: {
-          ...CORS,
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-        },
+        status,
+        contentType: 'application/json',
+        headers: CORS,
+        body: body === undefined ? '' : JSON.stringify(body),
       });
-      return;
-    }
-    await route.fulfill({
-      status,
-      contentType: 'application/json',
-      headers: CORS,
-      body: body === undefined ? '' : JSON.stringify(body),
-    });
-  });
+    },
+  );
 }
 
 export interface FakeUser {

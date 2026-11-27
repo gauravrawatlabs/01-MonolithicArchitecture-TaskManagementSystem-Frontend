@@ -227,6 +227,8 @@ describe('Layout', () => {
     await waitFor(() => {
       expect(screen.queryByRole('dialog', { name: 'Navigation' })).not.toBeInTheDocument();
     });
+    // The drawer closes at once; the URL changes when the lazy page has loaded. Wait for the page.
+    expect(await screen.findByRole('heading', { level: 1, name: 'Projects' })).toBeInTheDocument();
     expect(currentUrl(router)).toBe('/projects');
   });
 
