@@ -77,6 +77,7 @@ const table = (page: Page) => page.getByRole('table', { name: 'Categories' });
 
 test.describe('Categories (faked API)', () => {
   test('admin creates, renames and deletes a category', async ({ page }) => {
+    test.slow(); // a long flow with two full accessibility scans
     await fakeCategories(page, ['Bug', 'Feature']);
     await signInWithFakeApi(page, FAKE_USERS.admin, '/categories');
     await expect(table(page).getByText('Bug', { exact: true })).toBeVisible();

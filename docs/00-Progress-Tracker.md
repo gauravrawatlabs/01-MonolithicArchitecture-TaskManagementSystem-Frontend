@@ -13,8 +13,8 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
 | 7 | Authentication and API integration | **Verified** (2026-11-26) | 38 new Vitest (281 total) · 3 e2e ×3 · 1 real-API session flow | 281/281 + 78/78 + 2/2 | ✅ | [07-Phase7-Sessions-and-API-Integration.md](07-Phase7-Sessions-and-API-Integration.md) |
 | 8 | Dashboard | **Verified** (2026-11-27) | 37 new Vitest (318 total) · 5 e2e ×3 · 1 real-API | 318/318 + 93/93 + 3/3 | ✅ | [08-Phase8-Dashboard.md](08-Phase8-Dashboard.md) |
 | 9 | Category management | **Verified** (2026-11-27) | 19 new Vitest (337 total) · 3 e2e ×3 · real-API 1 (+1 admin, skipped) | 337/337 + 102/102 + 4/4 (1 skipped) | ✅ | [09-Phase9-Category-Management.md](09-Phase9-Category-Management.md) |
-| 10 | Project management | Pending | | | | Waiting for approval to start |
-| 11 | Task management | Pending | | | | |
+| 10 | Project management | **Verified** (2026-11-27) | 36 new Vitest (373 total) · 3 e2e ×3 · real-API 1 (+1 admin, skipped) | 373/373 + 111/111 (×3) + 5/5 (2 skipped) | ✅ | [10-Phase10-Project-Management.md](10-Phase10-Project-Management.md) |
+| 11 | Task management | Pending | | | | Waiting for approval to start |
 | 12 | Kanban board and comments | Pending | | | | |
 | 13 | Team and user management | Pending | | | | |
 | 14 | Settings and responsiveness | Pending | | | | |
@@ -165,4 +165,22 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
 - **Defects found and fixed:** lost URL update (two setters), tooltip-on-span a11y issue, Phase 8 skeleton
   `aria-label` without role, UI e2e depending on a running backend (details in 09 §5).
 - **Pending issues:** none.
+- **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-27.
+
+## Phase 10 — Project management
+
+- **Tasks completed:** paged project list (cards/table; server-side search, owned-by-me, sort, paging; all in the
+  URL; debounced search), create/edit with date rules, delete with cascade warning, project page with tabs
+  (overview with counts by status, members with an accessible user picker), breadcrumb/title show the project
+  name, permissions for owner/Admin/member.
+- **Files created/modified:** see [10 §4](10-Phase10-Project-Management.md#4-files).
+- **Tests written:** 36 Vitest tests (15 unit, 21 integration); `e2e/projects.spec.ts` (3 × 3); real-API
+  `e2e/backend/projects.backend.spec.ts` (regular user + optional admin flow).
+- **Tests passed:** Vitest 373/373 (stable ×3) · Playwright UI 111/111 on 3 consecutive runs · real API 5 passed,
+  2 skipped (admin flows need `E2E_ADMIN_EMAIL`/`E2E_ADMIN_PASSWORD`).
+- **Build status:** ✅ `npm run verify`.
+- **Defects found and fixed:** breadcrumb-label render loop; progress formula (cancelled); contrast of the view
+  toggle; deleted project flashing from cache; timing assumption in a Phase 7 test; E2E infrastructure (bundled
+  build, 6 workers, axe waits for colour transitions). Details in 10 §5.
+- **Pending issues:** none in the frontend. Backend observation (not changed): user lookup can't match a full name.
 - **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-27.

@@ -42,3 +42,14 @@ export type ProjectProgress = Schemas['ProjectProgressResponse'];
 export type Category = Schemas['CategoryResponse'];
 export type CreateCategoryRequest = Schemas['CreateCategoryRequest'];
 export type UpdateCategoryRequest = Schemas['UpdateCategoryRequest'];
+
+// Projects and users (Phase 10)
+export type ProjectSummary = Schemas['ProjectSummaryResponse'];
+export type ProjectDetails = Schemas['ProjectDetailsResponse'];
+export type ProjectMember = Schemas['ProjectMemberResponse'];
+export type PagedProjects = Schemas['PagedResultOfProjectSummaryResponse'];
+export type ProjectSortField = Schemas['ProjectSortField'];
+export type ProjectQuery = NonNullable<operations['Projects_GetProjects']['parameters']['query']>;
+export type CreateProjectRequest = Schemas['CreateProjectRequest'];
+export type UpdateProjectRequest = Schemas['UpdateProjectRequest'];
+export type UserLookup = Schemas['UserLookupResponse'];

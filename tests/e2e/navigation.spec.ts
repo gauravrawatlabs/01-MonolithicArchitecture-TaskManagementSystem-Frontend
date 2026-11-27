@@ -28,7 +28,7 @@ test.describe('Navigation and guards', () => {
     await signInWithFakeApi(page, FAKE_USERS.manager, '/projects/12/board');
 
     await expect(page).toHaveURL(/\/projects\/12\/board$/);
-    await expect(page.getByRole('heading', { level: 1, name: 'Project #12' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: 'Website Redesign' })).toBeVisible();
     await expect(page).toHaveTitle('Board · Task Management System');
   });
 

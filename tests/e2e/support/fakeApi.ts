@@ -92,6 +92,9 @@ export async function fakeApiHandler(
   );
 }
 
+/** Every fake user has this id (tests sign in as one user at a time). */
+export const FAKE_USER_ID = '00000000-0000-4000-8000-0000000000e2';
+
 export interface FakeUser {
   firstName: string;
   lastName: string;
@@ -108,7 +111,7 @@ export function fakeAuthResponse({ firstName, lastName, roles, emailConfirmed = 
     refreshToken: 'e2e-refresh-token',
     refreshTokenExpiresAtUtc: new Date(Date.now() + 7 * 24 * 3_600_000).toISOString(),
     user: {
-      id: '00000000-0000-4000-8000-0000000000e2',
+      id: FAKE_USER_ID,
       email: `${firstName.toLowerCase()}@example.test`,
       firstName,
       lastName,
@@ -177,4 +180,37 @@ export async function fakeEmptyWorkspace(page: Page): Promise<void> {
     hasNextPage: false,
   });
   await fakeApi(page, '/api/categories', 200, []);
+  await fakeApi(page, '/api/projects', 200, {
+    items: [],
+    page: 1,
+    pageSize: 12,
+    totalCount: 0,
+    totalPages: 0,
+    hasPreviousPage: false,
+    hasNextPage: false,
+  });
+  // Any project id opens "Website Redesign", owned by someone else (so navigation tests can visit tabs).
+  await fakeApiHandler(page, '/api/projects/*', ({ path }) => [
+    200,
+    {
+      id: Number(path.split('/')[3]),
+      name: 'Website Redesign',
+      description: null,
+      startDate: null,
+      endDate: null,
+      ownerId: '00000000-0000-4000-8000-0000000000aa',
+      ownerName: 'Olivia Owner',
+      members: [
+        {
+          userId: '00000000-0000-4000-8000-0000000000aa',
+          fullName: 'Olivia Owner',
+          email: 'olivia@example.test',
+          memberRole: 'Owner',
+          joinedAtUtc: '2026-11-01T09:00:00Z',
+        },
+      ],
+      createdAtUtc: '2026-11-01T09:00:00Z',
+      updatedAtUtc: null,
+    },
+  ]);
 }

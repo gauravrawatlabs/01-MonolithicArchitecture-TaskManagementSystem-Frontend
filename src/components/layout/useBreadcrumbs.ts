@@ -2,6 +2,8 @@ import { useMatches } from 'react-router';
 
 import { isRouteHandle, resolveHandleText } from '@/types/routing';
 
+import { useBreadcrumbLabels } from './breadcrumbLabels';
+
 export interface Crumb {
   label: string;
   to: string;
@@ -9,9 +11,11 @@ export interface Crumb {
 
 /** The breadcrumb trail from route `handle.breadcrumb` values, e.g. Projects › Project #12 › Board. */
 export function useBreadcrumbs(): Crumb[] {
+  const overrides = useBreadcrumbLabels();
   return useMatches().flatMap((match) => {
     if (!isRouteHandle(match.handle)) return [];
-    const label = resolveHandleText(match.handle.breadcrumb, match.params);
+    const label =
+      overrides.get(match.pathname) ?? resolveHandleText(match.handle.breadcrumb, match.params);
     return label ? [{ label, to: match.pathname }] : [];
   });
 }

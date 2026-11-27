@@ -11,6 +11,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
+    "e2e:serve": "vite build --mode development --outDir dist-e2e --emptyOutDir && vite preview --mode development --outDir dist-e2e",
     "typecheck": "tsc -b",
     "lint": "eslint . --max-warnings 0",
     "lint:fix": "eslint . --fix",

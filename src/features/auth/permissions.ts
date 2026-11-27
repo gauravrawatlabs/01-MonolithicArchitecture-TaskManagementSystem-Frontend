@@ -27,6 +27,11 @@ export function canCreateProjects(user: UserProfile | null): boolean {
   return hasAnyRole(user, ['Admin', 'Manager']) && isEmailVerified(user);
 }
 
+/** Backend policy CanLookupUsers (member pickers): Admin OR Manager, AND verified email. */
+export function canLookupUsers(user: UserProfile | null): boolean {
+  return canCreateProjects(user);
+}
+
 /** Backend policy CanManageCategories: Admin AND verified email. */
 export function canManageCategories(user: UserProfile | null): boolean {
   return isAdmin(user) && isEmailVerified(user);

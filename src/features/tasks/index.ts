@@ -4,5 +4,5 @@
  */
 export { PriorityBadge } from './components/PriorityBadge';
 export { StatusBadge } from './components/StatusBadge';
-export { taskKeys } from './api/tasksApi';
+export { taskKeys, tasksApi } from './api/tasksApi';
 export { useTasks } from './hooks/useTasks';

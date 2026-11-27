@@ -1,5 +1,5 @@
 import { act, screen, waitFor } from '@testing-library/react';
-import { delay, http, HttpResponse } from 'msw';
+import { http, HttpResponse } from 'msw';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
@@ -42,10 +42,15 @@ describe('Restoring the session on startup', () => {
   it('silently signs back in after a reload and stays on the requested page', async () => {
     storedSessionFromEarlierVisit();
     let refreshBody: unknown;
+    let releaseRefresh: (() => void) | undefined;
+    const loaderSeen = new Promise<void>((resolve) => {
+      releaseRefresh = resolve;
+    });
     server.use(
       http.post(apiUrl('/api/auth/refresh'), async ({ request }) => {
         refreshBody = await request.json();
-        await delay(150); // long enough to see the loader
+        // Answer only once the test has SEEN the loader (a fixed delay is a race when the machine is busy).
+        await loaderSeen;
         return HttpResponse.json(buildAuthResponse(jane, { refreshToken: 'ROTATED' }));
       }),
     );
@@ -53,8 +58,9 @@ describe('Restoring the session on startup', () => {
     const { router } = renderRoute('/projects/7');
 
     expect(await screen.findByText('Checking your session')).toBeInTheDocument();
+    releaseRefresh?.();
     expect(
-      await screen.findByRole('heading', { level: 1, name: 'Project #7' }),
+      await screen.findByRole('heading', { level: 1, name: 'Website Redesign' }),
     ).toBeInTheDocument();
     expect(currentUrl(router)).toBe('/projects/7');
     expect(refreshBody).toEqual({ refreshToken: 'STORED' });

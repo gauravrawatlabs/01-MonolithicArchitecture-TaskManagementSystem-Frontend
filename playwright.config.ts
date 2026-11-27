@@ -12,6 +12,10 @@ const baseURL = 'http://localhost:3000';
 export default defineConfig({
   testDir: './tests/e2e',
   fullyParallel: true,
+  // Each worker is a Chromium instance; accessibility scans (axe) are CPU-heavy. Playwright's default
+  // (half the logical cores = 11 here) oversubscribed a developer machine that is also running an IDE and
+  // the API, and long tests timed out. 6 workers finished FASTER and without timeouts.
+  workers: isCI ? undefined : 6,
   forbidOnly: isCI,
   retries: isCI ? 2 : 0,
   reporter: [['list'], ['html', { open: 'never' }]],
@@ -39,8 +43,13 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
   ],
+  // A BUNDLED build (a few files per page) instead of the dev server (hundreds of modules per page): with
+  // ~11 parallel browsers, one dev server became the bottleneck and tests timed out on a busy machine.
+  // NODE_ENV=development keeps dev-only routes (design system) and React's development checks.
+  // Locally, an already running server on :3000 (e.g. `npm run dev`) is reused.
   webServer: {
-    command: 'npm run dev',
+    command: 'npm run e2e:serve',
+    env: { NODE_ENV: 'development' },
     url: baseURL,
     reuseExistingServer: !isCI,
     timeout: 120_000,

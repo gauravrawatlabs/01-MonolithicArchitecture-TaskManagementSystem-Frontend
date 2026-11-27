@@ -32,7 +32,7 @@ describe('Route guards', () => {
     await user.click(screen.getByRole('button', { name: 'Sign in' }));
 
     expect(
-      await screen.findByRole('heading', { level: 1, name: 'Project #12' }),
+      await screen.findByRole('heading', { level: 1, name: 'Website Redesign' }),
     ).toBeInTheDocument();
     expect(currentUrl(router)).toBe('/projects/12/board');
   });
@@ -143,17 +143,17 @@ describe('Role-based navigation (Phase 1 §13)', () => {
 describe('Layout', () => {
   it('builds breadcrumbs and the document title from the route', async () => {
     renderRoute('/projects/12/members', { user: manager });
-    await screen.findByRole('heading', { level: 1, name: 'Project #12' });
+    // The project's breadcrumb shows its NAME once loaded (the route alone only knows "Project #12").
+    await screen.findByRole('heading', { level: 1, name: 'Website Redesign' });
 
     const breadcrumb = screen.getByRole('navigation', { name: 'Breadcrumb' });
     expect(within(breadcrumb).getByRole('link', { name: 'Projects' })).toHaveAttribute(
       'href',
       '/projects',
     );
-    expect(within(breadcrumb).getByRole('link', { name: 'Project #12' })).toHaveAttribute(
-      'href',
-      '/projects/12',
-    );
+    expect(
+      await within(breadcrumb).findByRole('link', { name: 'Website Redesign' }),
+    ).toHaveAttribute('href', '/projects/12');
     expect(within(breadcrumb).getByText('Members')).toHaveAttribute('aria-current', 'page');
     await waitFor(() => {
       expect(document.title).toBe('Members · Task Management System');
@@ -168,13 +168,15 @@ describe('Layout', () => {
       'aria-current',
       'page',
     );
-    await user.click(within(tabs).getByRole('link', { name: 'Members' }));
+    await user.click(within(tabs).getByRole('link', { name: 'Members (1)' }));
 
     // Wait for what the user sees (the lazily loaded tab content), not just the router's URL:
     // the URL changes first and React renders a moment later.
-    expect(await screen.findByText('Members coming soon')).toBeInTheDocument();
+    expect(
+      await screen.findByRole('table', { name: 'Members of Website Redesign' }),
+    ).toBeInTheDocument();
     expect(currentUrl(router)).toBe('/projects/12/members');
-    expect(within(tabs).getByRole('link', { name: 'Members' })).toHaveAttribute(
+    expect(within(tabs).getByRole('link', { name: 'Members (1)' })).toHaveAttribute(
       'aria-current',
       'page',
     );

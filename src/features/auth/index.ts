@@ -7,6 +7,7 @@ export { AuthProvider } from './AuthProvider';
 export { ChangePasswordForm } from './components/ChangePasswordForm';
 export { SessionsCard } from './components/SessionsCard';
 export {
+  canLookupUsers,
   canCreateProjects,
   canManageCategories,
   hasAnyRole,
