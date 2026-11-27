@@ -1,9 +1,19 @@
 import { expect, test } from '@playwright/test';
 
 import { expectNoAccessibilityViolations } from './support/accessibility';
-import { FAKE_USERS, fakeApi, fakeAuthResponse, signInWithFakeApi } from './support/fakeApi';
+import {
+  FAKE_USERS,
+  fakeEmptyWorkspace,
+  fakeApi,
+  fakeAuthResponse,
+  signInWithFakeApi,
+} from './support/fakeApi';
 
 test.describe('Session lifecycle (faked API)', () => {
+  test.beforeEach(async ({ page }) => {
+    await fakeEmptyWorkspace(page);
+  });
+
   test('stays signed in after a reload (refresh token in localStorage, access token re-issued)', async ({
     page,
   }) => {

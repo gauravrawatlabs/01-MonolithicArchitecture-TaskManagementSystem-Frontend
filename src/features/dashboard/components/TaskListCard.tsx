@@ -53,7 +53,12 @@ export function TaskListCard({
 
   if (query.isPending) {
     body = (
-      <div aria-busy="true" aria-label={`Loading ${title.toLowerCase()}`} className="grid gap-5">
+      <div
+        role="status"
+        aria-busy="true"
+        aria-label={`Loading ${title.toLowerCase()}`}
+        className="grid gap-5"
+      >
         <SkeletonText lines={2} />
         <SkeletonText lines={2} />
         <SkeletonText lines={2} />

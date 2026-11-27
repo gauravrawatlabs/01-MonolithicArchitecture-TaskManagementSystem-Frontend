@@ -12,8 +12,8 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
 | 6 | Authentication UI | **Verified** (2026-11-26) | 89 new Vitest (243 total) · 10 e2e ×3 · 1 real-API flow | 243/243 + 69/69 + 1/1 | ✅ | [06-Phase6-Authentication-UI.md](06-Phase6-Authentication-UI.md) |
 | 7 | Authentication and API integration | **Verified** (2026-11-26) | 38 new Vitest (281 total) · 3 e2e ×3 · 1 real-API session flow | 281/281 + 78/78 + 2/2 | ✅ | [07-Phase7-Sessions-and-API-Integration.md](07-Phase7-Sessions-and-API-Integration.md) |
 | 8 | Dashboard | **Verified** (2026-11-27) | 37 new Vitest (318 total) · 5 e2e ×3 · 1 real-API | 318/318 + 93/93 + 3/3 | ✅ | [08-Phase8-Dashboard.md](08-Phase8-Dashboard.md) |
-| 9 | Category management | Pending | | | | Waiting for approval to start |
-| 10 | Project management | Pending | | | | |
+| 9 | Category management | **Verified** (2026-11-27) | 19 new Vitest (337 total) · 3 e2e ×3 · real-API 1 (+1 admin, skipped) | 337/337 + 102/102 + 4/4 (1 skipped) | ✅ | [09-Phase9-Category-Management.md](09-Phase9-Category-Management.md) |
+| 10 | Project management | Pending | | | | Waiting for approval to start |
 | 11 | Task management | Pending | | | | |
 | 12 | Kanban board and comments | Pending | | | | |
 | 13 | Team and user management | Pending | | | | |
@@ -149,4 +149,20 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
   wrapping at 1280 px, shadowed `window` (details in 08 §6).
 - **Design change:** status donut → ordered horizontal bars (dataviz guidance, 08 §3).
 - **Pending issues:** none. Known limitation: upcoming deadlines previews 20 tasks (single-status API filter).
+- **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-27.
+
+## Phase 9 — Category management
+
+- **Tasks completed:** category list (client-side search and sort kept in the URL), create/edit modal (Zod rules
+  mirrored from the backend, 409 on the name field), delete confirmation with task count, admin-only controls with a
+  visible reason for unverified admins, cache updates + invalidation (incl. task queries), atomic URL state hook.
+- **Files created/modified:** see [09 §4](09-Phase9-Category-Management.md#4-files).
+- **Tests written:** 19 Vitest tests (5 unit, 14 integration); `e2e/categories.spec.ts` (3 × 3, stateful fake API);
+  real-API `e2e/backend/categories.backend.spec.ts` (regular user + optional admin flow).
+- **Tests passed:** Vitest 337/337 (stable ×4, ≈ 94 % lines) · Playwright UI 102/102 · real API 4 passed, 1 skipped
+  (admin flow needs `E2E_ADMIN_EMAIL`/`E2E_ADMIN_PASSWORD`; option B).
+- **Build status:** ✅ `npm run verify`; categories page chunk 4.8 kB gzip.
+- **Defects found and fixed:** lost URL update (two setters), tooltip-on-span a11y issue, Phase 8 skeleton
+  `aria-label` without role, UI e2e depending on a running backend (details in 09 §5).
+- **Pending issues:** none.
 - **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-27.

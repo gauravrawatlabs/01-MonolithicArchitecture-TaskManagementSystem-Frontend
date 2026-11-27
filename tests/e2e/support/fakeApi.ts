@@ -42,6 +42,56 @@ export async function fakeApi(
   );
 }
 
+export interface FakeRequest {
+  method: string;
+  path: string;
+  body: unknown;
+}
+
+/**
+ * A fake endpoint with custom logic (e.g. a stateful CRUD store). `respond` gets the request and returns
+ * [status, body]. Paths may end with "/*" to match one more segment (e.g. /api/categories/*).
+ */
+export async function fakeApiHandler(
+  page: Page,
+  path: string,
+  respond: (request: FakeRequest) => [number, unknown?],
+): Promise<void> {
+  const matches = (pathname: string) =>
+    path.endsWith('/*')
+      ? pathname.startsWith(path.slice(0, -1)) && pathname.length > path.length - 1
+      : pathname === path;
+  await page.route(
+    (url) => url.origin === API && matches(url.pathname),
+    async (route) => {
+      const request = route.request();
+      if (request.method() === 'OPTIONS') {
+        await route.fulfill({
+          status: 204,
+          headers: {
+            ...CORS,
+            'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          },
+        });
+        return;
+      }
+      const raw = request.postData();
+      const [status, body] = respond({
+        method: request.method(),
+        path: new URL(request.url()).pathname,
+        body: raw ? (JSON.parse(raw) as unknown) : undefined,
+      });
+      await route.fulfill({
+        status,
+        contentType: 'application/json',
+        headers: CORS,
+        body: body === undefined ? '' : JSON.stringify(body),
+      });
+    },
+  );
+}
+
 export interface FakeUser {
   firstName: string;
   lastName: string;
@@ -98,4 +148,33 @@ export async function signInWithFakeApi(
   await page.getByLabel('Password', { exact: true }).fill('Fake!Passw0rd');
   await page.getByRole('button', { name: 'Sign in' }).click();
   await expect(page.getByRole('button', { name: /Account menu for/ })).toBeVisible();
+}
+
+/**
+ * Default workspace data for UI tests that land on the dashboard but don't test it: an empty dashboard
+ * and no tasks. Register it FIRST (e.g. in beforeEach): Playwright gives routes registered LATER
+ * priority, so a test's own fakes still override it. Without it, such tests would depend on whether a
+ * real backend happens to be running.
+ */
+export async function fakeEmptyWorkspace(page: Page): Promise<void> {
+  await fakeApi(page, '/api/dashboard', 200, {
+    generatedAtUtc: new Date().toISOString(),
+    scope: 'MyProjects',
+    projectCount: 0,
+    tasks: { total: 0, open: 0, overdue: 0, dueInNext7Days: 0, completedInLast7Days: 0 },
+    myWork: { assignedOpen: 0, assignedOverdue: 0, assignedDueInNext7Days: 0 },
+    tasksByStatus: { Todo: 0, InProgress: 0, InReview: 0, Done: 0, Cancelled: 0 },
+    tasksByPriority: { Low: 0, Medium: 0, High: 0, Critical: 0 },
+    projects: [],
+  });
+  await fakeApi(page, '/api/tasks', 200, {
+    items: [],
+    page: 1,
+    pageSize: 20,
+    totalCount: 0,
+    totalPages: 0,
+    hasPreviousPage: false,
+    hasNextPage: false,
+  });
+  await fakeApi(page, '/api/categories', 200, []);
 }

@@ -40,6 +40,11 @@ export function formatDateTime(isoUtc: string, locale?: string): string {
   );
 }
 
+/** "28 Nov 2026" in the reader's locale and time zone. */
+export function formatDate(isoUtc: string, locale?: string): string {
+  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date(isoUtc));
+}
+
 /** Adds days to a date (for query windows such as "the next 7 days"). */
 export function addDays(date: Date, days: number): Date {
   return new Date(date.getTime() + days * DAY_MS);

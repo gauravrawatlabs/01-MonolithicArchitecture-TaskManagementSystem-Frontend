@@ -1,7 +1,7 @@
 import { expect, type Page, test } from '@playwright/test';
 
 import { expectNoAccessibilityViolations } from './support/accessibility';
-import { FAKE_USERS, signInWithFakeApi } from './support/fakeApi';
+import { FAKE_USERS, fakeEmptyWorkspace, signInWithFakeApi } from './support/fakeApi';
 
 /**
  * Desktop and tablet show the sidebar; phones open it as a drawer first.
@@ -17,6 +17,10 @@ async function openNavigation(page: Page) {
 }
 
 test.describe('Navigation and guards', () => {
+  test.beforeEach(async ({ page }) => {
+    await fakeEmptyWorkspace(page);
+  });
+
   test('redirects to sign in and returns to the requested page', async ({ page }) => {
     await page.goto('/projects/12/board');
     await expect(page).toHaveURL(/\/login\?returnUrl=%2Fprojects%2F12%2Fboard$/);
@@ -60,6 +64,10 @@ test.describe('Navigation and guards', () => {
 });
 
 test.describe('Accessibility of the app shell', () => {
+  test.beforeEach(async ({ page }) => {
+    await fakeEmptyWorkspace(page);
+  });
+
   test('sign-in page', async ({ page }) => {
     await page.goto('/login');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();

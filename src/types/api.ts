@@ -37,3 +37,8 @@ export type TaskQuery = NonNullable<operations['Tasks_GetTasks']['parameters']['
 // Dashboard (Phase 8)
 export type DashboardResponse = Schemas['DashboardResponse'];
 export type ProjectProgress = Schemas['ProjectProgressResponse'];
+
+// Categories (Phase 9)
+export type Category = Schemas['CategoryResponse'];
+export type CreateCategoryRequest = Schemas['CreateCategoryRequest'];
+export type UpdateCategoryRequest = Schemas['UpdateCategoryRequest'];

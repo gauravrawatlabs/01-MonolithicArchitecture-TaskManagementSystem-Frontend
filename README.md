@@ -4,8 +4,8 @@ A React + TypeScript single-page application for the
 [Task Management System API](https://github.com/gauravrawatlabs/01-MonolithicArchitecture-TaskManagementSystem)
 (ASP.NET Core 10 Web API, monolithic architecture, SQL Server, JWT + refresh tokens, role-based authorization).
 
-> **Status: Phase 8 of 17 (dashboard).** Authentication is complete, and the dashboard shows live figures, charts and
-> task lists from the API. Feature pages (categories, projects, tasks…) follow from Phase 9.
+> **Status: Phase 9 of 17 (category management).** Authentication, dashboard and categories (full CRUD) are complete.
+> Projects and tasks follow in Phases 10–11.
 > The project is built phase by phase as a learning project; see the [progress tracker](docs/00-Progress-Tracker.md).
 
 ## Architecture at a glance
@@ -40,6 +40,7 @@ ESLint · Prettier
 | 06 | [Authentication UI](docs/06-Phase6-Authentication-UI.md) | Forms with RHF + Zod, API client and errors, account flows, security decisions |
 | 07 | [Sessions and API integration](docs/07-Phase7-Sessions-and-API-Integration.md) | Token storage, refresh rotation, cross-tab lock, interceptors, session expiry |
 | 08 | [Dashboard](docs/08-Phase8-Dashboard.md) | TanStack Query reads, chart choice and accessibility, states, lazy charts |
+| 09 | [Category management](docs/09-Phase9-Category-Management.md) | First full CRUD: mutations and cache, URL state, permissions, delete confirmation |
 
 ## Getting started
 
@@ -57,7 +58,7 @@ npm run dev                 # http://localhost:3000 (the backend's CORS and emai
 | `npm run verify` | typecheck → lint → format check → unit/integration tests → production build |
 | `npm run test` | Vitest unit + integration tests (MSW, no backend needed) |
 | `npm run test:e2e:install` then `npm run test:e2e` | Playwright end-to-end tests (desktop, tablet, mobile); no backend needed |
-| `npm run test:e2e:backend` | Full flows against the **running** API (register → email link → sign in …); creates an `e2e-…@example.test` user in the dev database |
+| `npm run test:e2e:backend` | Full flows against the **running** API (register → email link → sign in …); creates `e2e-…@example.test` users in the dev database. Admin-only flows run when `E2E_ADMIN_EMAIL` / `E2E_ADMIN_PASSWORD` are set |
 | `npm run api:types` | Regenerate `src/api/generated/schema.ts` from the running backend |
 | `npm run build` | Production build into `dist/` (needs `VITE_API_BASE_URL`, see below) |
 

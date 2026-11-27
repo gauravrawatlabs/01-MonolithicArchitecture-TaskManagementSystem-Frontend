@@ -9,9 +9,9 @@ import { clearSession } from '@/services/tokenStorage';
 import { server } from '../mocks/server';
 import { resetMatchMedia } from '../utils/matchMedia';
 
-// findBy*/waitFor wait up to 5 s (default 1 s): lazy pages with heavy dependencies (Recharts) take
-// longer to load the first time in a test worker. Assertions still finish as soon as they pass.
-configure({ asyncUtilTimeout: 5_000 });
+// findBy*/waitFor wait up to 10 s (default 1 s): lazy pages load real code, and with many test files the
+// workers compete for CPU at startup. Assertions still finish as soon as they pass.
+configure({ asyncUtilTimeout: 10_000 });
 
 // MSW 3 renamed onUnhandledRequest → onUnhandledFrame (it also covers WebSocket/SSE frames).
 // 'error': any request without a handler fails the test, so no test can silently hit a real API.
