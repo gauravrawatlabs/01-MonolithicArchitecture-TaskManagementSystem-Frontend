@@ -1,0 +1,16 @@
+# Only what the image build needs (smaller, faster context; no local secrets such as .env.*.local)
+node_modules
+dist
+dist-e2e
+dist-csp
+coverage
+playwright-report
+test-results
+.git
+.github
+.vscode
+.idea
+*.local
+.env.production*
+docs
+tests

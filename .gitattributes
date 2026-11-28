@@ -1,7 +1,2 @@
-# Store and check out text files with LF line endings on every OS
-# (Prettier enforces "endOfLine": "lf", so CRLF checkouts on Windows would fail format checks).
-* text=auto eol=lf
-*.png binary
-*.jpg binary
-*.ico binary
-*.woff2 binary
+# Shell scripts run inside Linux containers: always LF, even when checked out on Windows.
+*.sh text eol=lf
