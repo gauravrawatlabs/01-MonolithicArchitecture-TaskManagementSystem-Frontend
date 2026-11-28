@@ -203,6 +203,58 @@ describe('Task lists', () => {
     expect(screen.queryByRole('button', { name: 'Actions for Ship v1' })).not.toBeInTheDocument();
   });
 
+  it('edits and deletes from the row menu (owner)', async () => {
+    const { requests } = serveAll(owner);
+    const { user } = renderRoute('/tasks', { user: owner });
+    await screen.findByRole('link', { name: 'Fix login bug' });
+
+    await user.click(await screen.findByRole('button', { name: 'Actions for Fix login bug' }));
+    await user.click(await screen.findByRole('menuitem', { name: 'Edit' }));
+    const dialog = await screen.findByRole('dialog', { name: 'Edit task' });
+    await user.clear(within(dialog).getByLabelText(/^Title/));
+    await user.type(within(dialog).getByLabelText(/^Title/), 'Fix login bug on Safari');
+    await user.click(within(dialog).getByRole('button', { name: 'Save changes' }));
+    expect(
+      await screen.findByRole('link', { name: 'Fix login bug on Safari' }),
+    ).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Actions for Fix login bug on Safari' }));
+    await user.click(await screen.findByRole('menuitem', { name: 'Delete' }));
+    const confirm = await screen.findByRole('alertdialog', {
+      name: 'Delete "Fix login bug on Safari"?',
+    });
+    await user.click(within(confirm).getByRole('button', { name: 'Delete task' }));
+    await waitFor(() => {
+      expect(
+        screen.queryByRole('link', { name: 'Fix login bug on Safari' }),
+      ).not.toBeInTheDocument();
+    });
+    expect(requests.map((r) => r.method)).toEqual(['PUT', 'DELETE']);
+  });
+
+  it('pages through long lists and changes the page size (both on the server, in the URL)', async () => {
+    const many = Array.from({ length: 25 }, (_, i) =>
+      buildTask({
+        id: 600 + i,
+        title: `Task ${String(i + 1).padStart(2, '0')}`,
+        projectId: 7,
+        projectName: 'Website Redesign',
+        createdById: owner.id,
+      }),
+    );
+    const { listQueries } = serveAll(owner, many);
+    const { user, router } = renderRoute('/tasks?sort=Title', { user: owner });
+    await screen.findByText('Showing 1–20 of 25 tasks');
+
+    await user.click(screen.getByRole('button', { name: 'Page 2' }));
+    expect(await screen.findByText('Showing 21–25 of 25 tasks')).toBeInTheDocument();
+    expect(listQueries.at(-1)?.get('Page')).toBe('2');
+
+    await user.selectOptions(screen.getByLabelText('Per page'), '50');
+    expect(await screen.findByText('Showing 1–25 of 25 tasks')).toBeInTheDocument();
+    expect(currentUrl(router)).toBe('/tasks?sort=Title&size=50'); // page reset to 1
+  });
+
   it('shows an error with a retry when the list cannot be loaded', async () => {
     serveAll();
     let fail = true;

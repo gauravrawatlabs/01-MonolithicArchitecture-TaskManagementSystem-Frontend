@@ -18,7 +18,6 @@ import { keepPreviousData, useQueries } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 
 import { paths } from '@/constants/routes';
-import { TASK_STATUS_META } from '@/constants/taskMeta';
 import { useAuth } from '@/features/auth';
 import { allowedMoves, taskKeys, taskPermissions, tasksApi } from '@/features/tasks';
 import { type ProjectDetails, type Task, type TaskItemStatus } from '@/types/api';
@@ -31,10 +30,9 @@ import {
   MAIN_COLUMNS,
 } from '../boardColumns';
 import { useMoveTask } from '../hooks/useMoveTask';
-import { BoardColumn, type DropState } from './BoardColumn';
+import { announce, dropState, type DropState, nextColumn, shouldMove } from '../boardDnd';
+import { BoardColumn } from './BoardColumn';
 import { TaskCardView } from './TaskCard';
-
-const label = (status: TaskItemStatus) => TASK_STATUS_META[status].label;
 
 /**
  * Keyboard dragging: ← / → jump straight to the previous / next COLUMN (instead of nudging the card a few
@@ -42,15 +40,13 @@ const label = (status: TaskItemStatus) => TASK_STATUS_META[status].label;
  */
 function columnJumper(order: readonly TaskItemStatus[]): KeyboardCoordinateGetter {
   return (event, { context, currentCoordinates }) => {
-    const step = event.code === 'ArrowRight' ? 1 : event.code === 'ArrowLeft' ? -1 : 0;
-    if (step === 0) return undefined;
-    event.preventDefault();
     const start = (context.over?.id ??
       (context.active?.data.current as { task?: Task } | undefined)?.task?.status) as
       TaskItemStatus | undefined;
-    const index = start ? order.indexOf(start) : -1;
-    const target = order[Math.min(order.length - 1, Math.max(0, index + step))];
-    const rect = target ? context.droppableRects.get(target) : undefined;
+    const target = nextColumn(order, start, event.code);
+    if (!target) return undefined;
+    event.preventDefault();
+    const rect = context.droppableRects.get(target);
     if (!rect) return currentCoordinates;
     const width = context.collisionRect?.width ?? 0;
     return { x: rect.left + rect.width / 2 - width / 2, y: currentCoordinates.y };
@@ -123,42 +119,28 @@ export function KanbanBoard({ project, filters, showCancelled }: KanbanBoardProp
   const taskOf = (event: { active: { data: { current?: unknown } } }) =>
     (event.active.data.current as { task: Task }).task;
   const activeMoves = active ? movesFor(active) : [];
-  const dropState = (status: TaskItemStatus): DropState => {
-    if (!active) return 'idle';
-    if (status === active.status) return 'source';
-    return activeMoves.includes(status) ? 'allowed' : 'forbidden';
-  };
+  const stateOf = (status: TaskItemStatus): DropState => dropState(active, status, activeMoves);
 
   // Last column announced during the current drag (pick-up starts over the card's own column).
-  const lastOver = useRef<string | number | null>(null);
+  const lastOver = useRef<TaskItemStatus | null>(null);
   const announcements: Announcements = {
     onDragStart: ({ active: a }) => {
       const task = taskOf({ active: a });
       lastOver.current = task.status;
-      const allowed = movesFor(task).map(label).join(', ');
-      return `Picked up ${task.title} from ${label(task.status)}. It can move to: ${allowed}.`;
+      return announce.start(task, movesFor(task));
     },
     onDragOver: ({ active: a, over }) => {
       const task = taskOf({ active: a });
-      if (!over) return `${task.title} is not over a column.`;
-      const to = over.id as TaskItemStatus;
-      // Right after pick-up the card is over its own column: stay quiet so "Picked up…" is heard.
-      if (to === task.status)
-        return over.id === lastOver.current
-          ? undefined
-          : `${task.title} is back over ${label(to)}.`;
-      lastOver.current = to;
-      return movesFor(task).includes(to) ? `Over ${label(to)}.` : `Over ${label(to)}: not allowed.`;
+      const to = (over?.id ?? null) as TaskItemStatus | null;
+      const message = announce.over(task, to, lastOver.current, movesFor(task));
+      if (to) lastOver.current = to;
+      return message;
     },
     onDragEnd: ({ active: a, over }) => {
       const task = taskOf({ active: a });
-      const to = over?.id as TaskItemStatus | undefined;
-      return to && to !== task.status && movesFor(task).includes(to)
-        ? `${task.title} moved to ${label(to)}.`
-        : `${task.title} stays in ${label(task.status)}.`;
+      return announce.end(task, over?.id as TaskItemStatus | undefined, movesFor(task));
     },
-    onDragCancel: ({ active: a }) =>
-      `Moving cancelled. ${taskOf({ active: a }).title} stays where it was.`,
+    onDragCancel: ({ active: a }) => announce.cancel(taskOf({ active: a })),
   };
 
   const onDragStart = (event: DragStartEvent) => {
@@ -169,7 +151,7 @@ export function KanbanBoard({ project, filters, showCancelled }: KanbanBoardProp
     const task = taskOf(event);
     const to = event.over?.id as TaskItemStatus | undefined;
     // Dropping on a forbidden column does nothing: no API call, no error (the column said "Not allowed").
-    if (to && to !== task.status && movesFor(task).includes(to)) onMove(task, to);
+    if (to && shouldMove(task, to, movesFor(task))) onMove(task, to);
   };
 
   return (
@@ -205,7 +187,7 @@ export function KanbanBoard({ project, filters, showCancelled }: KanbanBoardProp
               isPending={result?.isPending ?? true}
               error={result?.isError ? result.error : null}
               onRetry={() => void result?.refetch()}
-              dropState={dropState(status)}
+              dropState={stateOf(status)}
               movesFor={movesFor}
               onMove={onMove}
               canLoadMore={Boolean(

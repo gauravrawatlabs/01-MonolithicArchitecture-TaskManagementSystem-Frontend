@@ -10,9 +10,8 @@ import { type PagedTasks, type Task, type TaskItemStatus } from '@/types/api';
 import { cn } from '@/utils/cn';
 
 import { COLUMN_MAX_SIZE } from '../boardColumns';
+import { type DropState } from '../boardDnd';
 import { TaskCard } from './TaskCard';
-
-export type DropState = 'idle' | 'allowed' | 'forbidden' | 'source';
 
 export interface BoardColumnProps {
   status: TaskItemStatus;

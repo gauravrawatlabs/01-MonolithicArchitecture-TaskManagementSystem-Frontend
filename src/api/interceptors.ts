@@ -10,7 +10,9 @@ import { refreshSession } from './session';
  *
  *   request  → Authorization: Bearer <access token of this tab>
  *   response → 401 on a normal request while a refresh token exists:
- *                refresh (shared by all concurrent 401s) → retry the request ONCE with the new token
+ *                if the token it was SENT with has since been replaced (another request already refreshed):
+ *                  retry ONCE with the current token, without refreshing again
+ *                otherwise: refresh (shared by all concurrent 401s) → retry ONCE with the new token
  *              anything else → reject with ApiError (one error shape for the whole app)
  *
  * Never retried: requests marked skipAuthRefresh (login, register, logout…) and retries themselves.
@@ -41,6 +43,13 @@ export function installAuthInterceptors(client: AxiosInstance): void {
       }
 
       config._retry = true;
+      // A slow 401 from the same batch can arrive AFTER another request's refresh has finished. Its request
+      // carried the OLD token; refreshing again would rotate the refresh token for nothing (Phase 15 bug).
+      const current = getAccessToken();
+      const sentWith = String(config.headers.Authorization ?? '');
+      if (current !== null && sentWith !== `Bearer ${current}`) {
+        return client.request(config); // the request interceptor adds the CURRENT access token
+      }
       try {
         await refreshSession();
       } catch {

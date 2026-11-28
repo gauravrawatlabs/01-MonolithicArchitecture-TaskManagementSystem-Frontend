@@ -1,4 +1,4 @@
-import { http, HttpResponse } from 'msw';
+import { delay, http, HttpResponse } from 'msw';
 import { describe, expect, it } from 'vitest';
 
 import { ApiError } from '@/api/apiError';
@@ -57,6 +57,35 @@ describe('auth interceptor', () => {
 
     expect(refreshCalls).toHaveLength(1);
     expect(results.every((result) => (result.data as { ok: boolean }).ok)).toBe(true);
+  });
+
+  it('a late 401 (its request left BEFORE another refresh finished) retries with the new token, no 2nd refresh', async () => {
+    signIn();
+    let calls = 0;
+    const seen: (string | null)[] = [];
+    server.use(
+      http.get(apiUrl(PROTECTED), async ({ request }) => {
+        const authorization = request.headers.get('Authorization');
+        seen.push(authorization);
+        calls += 1;
+        if (authorization === 'Bearer FRESH') return HttpResponse.json({ ok: true });
+        // The second request was sent with the old token, but its 401 only comes back AFTER the first
+        // request's refresh has already completed (a slow response in the same batch).
+        if (calls === 2) {
+          while (getAccessToken() !== 'FRESH') await delay(5);
+        }
+        return problem(401);
+      }),
+    );
+    const refreshCalls = captureRequests('post', '/api/auth/refresh', () =>
+      HttpResponse.json(buildAuthResponse(undefined, { accessToken: 'FRESH', refreshToken: 'R2' })),
+    );
+
+    const results = await Promise.all([apiClient.get(PROTECTED), apiClient.get(PROTECTED)]);
+
+    expect(results.map((r) => (r.data as { ok: boolean }).ok)).toEqual([true, true]);
+    expect(refreshCalls).toHaveLength(1); // the late 401 must NOT start a second refresh (token rotation)
+    expect(seen.filter((a) => a === 'Bearer FRESH')).toHaveLength(2);
   });
 
   it('gives up with the original 401 when the refresh is rejected', async () => {

@@ -18,8 +18,8 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
 | 12 | Kanban board and comments | **Verified** (2026-11-28) | 25 new Vitest (454 total) · 4 e2e ×3 · real-API 1 (+1 admin, skipped) | 454/454 + 130/130 (×2, 2 skipped) + 7/7 (4 skipped) | ✅ | [12-Phase12-Kanban-Board-and-Comments.md](12-Phase12-Kanban-Board-and-Comments.md) |
 | 13 | Team and user management | **Verified** (2026-11-28) | 21 new Vitest (475 total) · 3 e2e ×3 · real-API 1 (+1 admin, skipped) | 475/475 (×3) + 139/139 (×2, 2 skipped) + 8/8 (5 skipped) | ✅ | [13-Phase13-Team-and-User-Management.md](13-Phase13-Team-and-User-Management.md) |
 | 14 | Settings and responsiveness | **Verified** (2026-11-28) | 12 new Vitest (487 total) · responsive sweep (22 pages × 3) · real-API 1 | 487/487 + 142/142 (×2, 2 skipped) + 9/9 (5 skipped) | ✅ | [14-Phase14-Settings-and-Responsiveness.md](14-Phase14-Settings-and-Responsiveness.md) |
-| 15 | Complete testing and QA | Pending | | | | Waiting for approval to start |
-| 16 | Performance and security review | Pending | | | | Re-evaluate HttpOnly refresh-token cookie |
+| 15 | Complete testing and QA | **Verified** (2026-11-28) | 10 new Vitest (497 total) · real-API journey (+1, admin) | 497/497 (5 stable runs) + 142/142 (×2) + 9/9 (6 skipped) | ✅ | [15-Phase15-Complete-Testing-and-QA.md](15-Phase15-Complete-Testing-and-QA.md) |
+| 16 | Performance and security review | Pending | | | | Waiting for approval to start. Re-evaluate HttpOnly refresh-token cookie |
 | 17 | Deployment and GitHub | Pending | | | | |
 
 ## Phase 1 — Requirements and UI/UX design
@@ -249,4 +249,20 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
 - **Defects found and fixed:** account status invisible on phones; task details below the discussion on phones;
   double resend paths; Vitest worker oversubscription (measured). Details in 14 §5.
 - **Pending issues:** none.
+- **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-28.
+
+## Phase 15 — Complete testing and QA
+
+- **Tasks completed:** coverage measured and gaps closed where behaviour was unproven (board drag rules extracted
+  and unit-tested, task-list menu and paging); cross-cutting resilience tests through real pages (parallel 401s →
+  one refresh, network failure + retry, slow response); stability runs; full two-person journey against the real
+  API (Admin-gated); QA report with how-to-run, proven/unproven matrix and known limitations.
+- **Files created/modified:** `src/api/interceptors.ts` (fix), `src/features/board/boardDnd.ts` (new) + `KanbanBoard`,
+  tests (`resilience`, `boardDnd`, `tasks`, `interceptors`), `e2e/backend/journey.backend.spec.ts`, docs/15.
+- **Tests written:** 10 Vitest tests; 1 real-API journey (Admin-gated).
+- **Tests passed:** Vitest 497/497, stable 5 of 5 runs · Playwright UI 142/142 on 2 runs · real API 9/9 (6 skipped).
+- **Build status:** ✅ `npm run verify`.
+- **Defects found and fixed:** a late 401 triggered a SECOND token refresh (Phase 7 race, found through a real
+  page; deterministic unit test added). Details in 15 §4.
+- **Pending issues:** the 6 Admin-gated real-API tests have never run (no Admin credentials provided).
 - **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-28.
