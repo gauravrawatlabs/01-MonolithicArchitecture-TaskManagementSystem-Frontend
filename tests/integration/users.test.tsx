@@ -93,7 +93,8 @@ describe('Admin › Users', () => {
       PageSize: '20',
     });
     const ruiRow = screen.getByRole('row', { name: /Rui Regular/ });
-    expect(within(ruiRow).getByText('Deactivated')).toBeInTheDocument();
+    // Once in the Status column (md and up) and once under the email (phones, where that column is hidden).
+    expect(within(ruiRow).getAllByText('Deactivated')).toHaveLength(2);
   });
 
   it('filters by role and status on the server, kept in the URL; last sign-in sorts newest first', async () => {

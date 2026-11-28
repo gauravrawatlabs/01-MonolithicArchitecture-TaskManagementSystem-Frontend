@@ -17,8 +17,8 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
 | 11 | Task management | **Verified** (2026-11-28) | 56 new Vitest (429 total) · 3 e2e ×3 · real-API 1 (+1 admin, skipped) | 429/429 + 120/120 (×2) + 6/6 (3 skipped) | ✅ | [11-Phase11-Task-Management.md](11-Phase11-Task-Management.md) |
 | 12 | Kanban board and comments | **Verified** (2026-11-28) | 25 new Vitest (454 total) · 4 e2e ×3 · real-API 1 (+1 admin, skipped) | 454/454 + 130/130 (×2, 2 skipped) + 7/7 (4 skipped) | ✅ | [12-Phase12-Kanban-Board-and-Comments.md](12-Phase12-Kanban-Board-and-Comments.md) |
 | 13 | Team and user management | **Verified** (2026-11-28) | 21 new Vitest (475 total) · 3 e2e ×3 · real-API 1 (+1 admin, skipped) | 475/475 (×3) + 139/139 (×2, 2 skipped) + 8/8 (5 skipped) | ✅ | [13-Phase13-Team-and-User-Management.md](13-Phase13-Team-and-User-Management.md) |
-| 14 | Settings and responsiveness | Pending | | | | Waiting for approval to start |
-| 15 | Complete testing and QA | Pending | | | | |
+| 14 | Settings and responsiveness | **Verified** (2026-11-28) | 12 new Vitest (487 total) · responsive sweep (22 pages × 3) · real-API 1 | 487/487 + 142/142 (×2, 2 skipped) + 9/9 (5 skipped) | ✅ | [14-Phase14-Settings-and-Responsiveness.md](14-Phase14-Settings-and-Responsiveness.md) |
+| 15 | Complete testing and QA | Pending | | | | Waiting for approval to start |
 | 16 | Performance and security review | Pending | | | | Re-evaluate HttpOnly refresh-token cookie |
 | 17 | Deployment and GitHub | Pending | | | | |
 
@@ -231,5 +231,22 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
   real API 8 passed, 5 skipped (admin flows need `E2E_ADMIN_EMAIL`/`E2E_ADMIN_PASSWORD`).
 - **Build status:** ✅ `npm run verify`.
 - **Defects found and fixed:** run-together accessible name on team cards (stretched link); a racy test. Details in 13 §5.
+- **Pending issues:** none.
+- **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-28.
+
+## Phase 14 — Settings and responsiveness
+
+- **Tasks completed:** Settings with four tabs: Account (verification + resend with cooldown, single resend
+  path via the banner), Security (from Phases 6–7), Appearance (theme, reduce motion), Preferences (rows per page,
+  notification duration; device-only, validated per field, synced across tabs); responsiveness sweep of 22 pages ×
+  3 viewports plus screenshot review and fixes.
+- **Files created/modified:** see [14 §4](14-Phase14-Settings-and-Responsiveness.md#4-files).
+- **Tests written:** 12 Vitest tests (6 unit, 6 integration); `e2e/responsive.spec.ts` (1 × 3, 22 pages each);
+  real-API `e2e/backend/settings.backend.spec.ts`.
+- **Tests passed:** Vitest 487/487 · Playwright UI 142/142 on 2 consecutive runs (2 skipped by design) · real API
+  9 passed, 5 skipped (admin flows need `E2E_ADMIN_EMAIL`/`E2E_ADMIN_PASSWORD`).
+- **Build status:** ✅ `npm run verify` (twice after the Vitest worker cap).
+- **Defects found and fixed:** account status invisible on phones; task details below the discussion on phones;
+  double resend paths; Vitest worker oversubscription (measured). Details in 14 §5.
 - **Pending issues:** none.
 - **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-28.

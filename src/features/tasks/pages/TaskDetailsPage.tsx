@@ -150,7 +150,32 @@ function TaskDetails({ task }: { task: NonNullable<ReturnType<typeof useTask>['d
       />
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="grid content-start gap-6 lg:col-span-2">
+        {/* First in the page order: on phones, owner and due date come right after the title (not after
+            the whole discussion). On large screens it is placed in the right column. */}
+        <Card className="content-start lg:col-start-3 lg:row-start-1">
+          <CardHeader title="Details" />
+          <CardContent>
+            <dl className="grid gap-4 text-sm">
+              <Detail label="Assignee">
+                {permissions.canAssign && permissions.project ? (
+                  <AssigneeControl task={task} project={permissions.project} />
+                ) : (
+                  (task.assignedToName ?? 'Unassigned')
+                )}
+              </Detail>
+              <Detail label="Due">
+                <DueDate task={task} />
+              </Detail>
+              <Detail label="Category">{task.categoryName ?? 'None'}</Detail>
+              <Detail label="Created by">{task.createdByName}</Detail>
+              <Detail label="Created">{formatDateTime(task.createdAtUtc)}</Detail>
+              {task.updatedAtUtc ? (
+                <Detail label="Updated">{formatDateTime(task.updatedAtUtc)}</Detail>
+              ) : null}
+            </dl>
+          </CardContent>
+        </Card>
+        <div className="grid content-start gap-6 lg:col-span-2 lg:col-start-1 lg:row-start-1">
           <Card>
             <CardHeader title="Status" />
             <CardContent>
@@ -189,30 +214,6 @@ function TaskDetails({ task }: { task: NonNullable<ReturnType<typeof useTask>['d
 
           <CommentsSection taskId={task.id} project={permissions.project} />
         </div>
-
-        <Card className="content-start">
-          <CardHeader title="Details" />
-          <CardContent>
-            <dl className="grid gap-4 text-sm">
-              <Detail label="Assignee">
-                {permissions.canAssign && permissions.project ? (
-                  <AssigneeControl task={task} project={permissions.project} />
-                ) : (
-                  (task.assignedToName ?? 'Unassigned')
-                )}
-              </Detail>
-              <Detail label="Due">
-                <DueDate task={task} />
-              </Detail>
-              <Detail label="Category">{task.categoryName ?? 'None'}</Detail>
-              <Detail label="Created by">{task.createdByName}</Detail>
-              <Detail label="Created">{formatDateTime(task.createdAtUtc)}</Detail>
-              {task.updatedAtUtc ? (
-                <Detail label="Updated">{formatDateTime(task.updatedAtUtc)}</Detail>
-              ) : null}
-            </dl>
-          </CardContent>
-        </Card>
       </div>
 
       {dialog === 'edit' ? (

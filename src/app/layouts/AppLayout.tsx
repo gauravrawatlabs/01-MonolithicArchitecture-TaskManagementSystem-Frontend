@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Outlet, useNavigation } from 'react-router';
+import { Link, Outlet, useLocation, useNavigation } from 'react-router';
 
 import { Avatar } from '@/components/common/Avatar';
 import { ThemeToggle } from '@/components/common/ThemeToggle';
@@ -11,6 +11,7 @@ import { Topbar } from '@/components/layout/Topbar';
 import { UserMenu } from '@/components/layout/UserMenu';
 import { env } from '@/constants/env';
 import { NAV_SECTIONS, type NavSection, SETTINGS_NAV_ITEM } from '@/constants/navigation';
+import { paths } from '@/constants/routes';
 import { hasAnyRole, isEmailVerified, useAuth } from '@/features/auth';
 import { DESKTOP_QUERY, TABLET_QUERY, useMediaQuery } from '@/hooks/useMediaQuery';
 import { readSidebarCollapsed, writeSidebarCollapsed } from '@/services/preferencesStorage';
@@ -36,6 +37,7 @@ function visibleSections(user: UserProfile | null): NavSection[] {
 export function AppLayout() {
   const { user, signOut } = useAuth();
   const navigation = useNavigation();
+  const { pathname } = useLocation();
   const isDesktop = useMediaQuery(DESKTOP_QUERY);
   const isTabletUp = useMediaQuery(TABLET_QUERY);
   const [collapsed, setCollapsed] = useState(readSidebarCollapsed);
@@ -148,7 +150,21 @@ export function AppLayout() {
         >
           <div className="mx-auto w-full max-w-[1440px]">
             {user && !isEmailVerified(user) ? (
-              <Banner variant="warning" title="Please verify your email address" className="mb-6">
+              <Banner
+                variant="warning"
+                title="Please verify your email address"
+                className="mb-6"
+                action={
+                  pathname === paths.settings('account') ? null : (
+                    <Link
+                      to={paths.settings('account')}
+                      className="font-medium underline underline-offset-2"
+                    >
+                      Resend the email
+                    </Link>
+                  )
+                }
+              >
                 We sent a confirmation link to {user.email}. Until you confirm it, you can look
                 around but not create or change anything.
               </Banner>

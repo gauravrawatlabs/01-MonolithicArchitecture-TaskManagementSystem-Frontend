@@ -1,6 +1,7 @@
 import { QueryClientProvider } from '@tanstack/react-query';
 import { type ReactNode, useState } from 'react';
 
+import { PreferencesProvider } from '@/contexts/preferences';
 import { ThemeProvider } from '@/contexts/theme';
 import { ToastProvider } from '@/contexts/toast';
 import { AuthProvider } from '@/features/auth';
@@ -25,9 +26,11 @@ export function AppProviders({ children, initialUser }: AppProvidersProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <ToastProvider>
-          <AuthProvider initialUser={initialUser}>{children}</AuthProvider>
-        </ToastProvider>
+        <PreferencesProvider>
+          <ToastProvider>
+            <AuthProvider initialUser={initialUser}>{children}</AuthProvider>
+          </ToastProvider>
+        </PreferencesProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

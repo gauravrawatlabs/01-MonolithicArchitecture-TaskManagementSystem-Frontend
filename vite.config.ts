@@ -44,6 +44,10 @@ export default defineConfig(({ command, mode }) => {
       // Integration tests load real lazy pages; the first import of a heavy dependency (Recharts) can take
       // several seconds when many workers start at once. A test still ends as soon as it passes.
       testTimeout: 15_000,
+      // Half the cores. The default (one worker per core) starts ~21 jsdom workers that load the same heavy page
+      // modules at once; on a busy developer machine they starved each other into timeouts (3 failures in one
+      // run), while 50% passed every run at about the same speed (Phase 14).
+      maxWorkers: '50%',
       coverage: {
         provider: 'v8',
         include: ['src/**/*.{ts,tsx}'],

@@ -2,6 +2,8 @@ import * as RadixToast from '@radix-ui/react-toast';
 import { CircleAlert, CircleCheck, Info, X } from 'lucide-react';
 import { type ReactNode, useCallback, useMemo, useRef, useState } from 'react';
 
+import { usePreferences } from '@/contexts/preferences';
+import { TOAST_DURATION_FACTOR } from '@/services/devicePreferences';
 import { cn } from '@/utils/cn';
 
 import { type ToastApi, ToastContext, type ToastOptions, type ToastVariant } from './toastContext';
@@ -27,6 +29,7 @@ const variantStyles: Record<ToastVariant, { icon: typeof Info; iconClassName: st
  */
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
+  const { preferences } = usePreferences(); // Settings › Preferences: how long notifications stay
   const nextId = useRef(1);
 
   const remove = useCallback((id: number) => {
@@ -67,7 +70,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           return (
             <RadixToast.Root
               key={toast.id}
-              duration={DURATION_MS[toast.variant]}
+              duration={
+                DURATION_MS[toast.variant] * TOAST_DURATION_FACTOR[preferences.toastDuration]
+              }
               type={toast.variant === 'error' ? 'foreground' : 'background'}
               onOpenChange={(open) => {
                 if (!open) remove(toast.id);

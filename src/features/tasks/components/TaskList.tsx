@@ -17,6 +17,7 @@ import {
   TASK_STATUSES,
   TASK_STATUS_META,
 } from '@/constants/taskMeta';
+import { usePreferences } from '@/contexts/preferences';
 import { useAuth } from '@/features/auth';
 import { useCategories } from '@/features/categories';
 import { useProjects } from '@/features/projects';
@@ -61,7 +62,12 @@ export function TaskList({ projectId, emptyDescription }: TaskListProps) {
   const [dialog, setDialog] = useState<Dialog>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const filtersId = useId();
-  const [url, updateUrl] = useUrlState(TASK_URL_DEFAULTS);
+  // Rows per page: the URL wins (?size=); otherwise this device's preference (Settings › Preferences).
+  const { preferences } = usePreferences();
+  const [url, updateUrl] = useUrlState({
+    ...TASK_URL_DEFAULTS,
+    size: String(preferences.pageSize),
+  });
   const categories = useCategories();
   const inProject = projectId !== undefined;
   const projects = useProjects({ SortBy: 'Name', SortDirection: 'Asc', Page: 1, PageSize: 100 });

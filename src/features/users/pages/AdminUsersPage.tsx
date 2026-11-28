@@ -15,6 +15,7 @@ import { DataTable, type DataTableColumn } from '@/components/tables/DataTable';
 import { Pagination } from '@/components/tables/Pagination';
 import { ROLES } from '@/constants/roles';
 import { paths } from '@/constants/routes';
+import { usePreferences } from '@/contexts/preferences';
 import { useAuth } from '@/features/auth';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { useUrlState } from '@/hooks/useUrlState';
@@ -36,6 +37,7 @@ const naturalDirection = (field: UserSortField) =>
 /** /admin/users: every account (Admin + verified email). Search, filters, sort and paging on the server. */
 export function AdminUsersPage() {
   const { user: me } = useAuth();
+  const { preferences } = usePreferences(); // default rows per page on this device
   const [url, updateUrl] = useUrlState({
     search: '',
     role: '',
@@ -43,7 +45,7 @@ export function AdminUsersPage() {
     sort: 'Email',
     dir: '',
     page: '1',
-    size: '20',
+    size: String(preferences.pageSize),
   });
   const search = useDebouncedValue(url.search.trim(), 300);
   const allowed = canAdministerUsers(me);
@@ -52,7 +54,9 @@ export function AdminUsersPage() {
     ? (url.sort as UserSortField)
     : 'Email';
   const direction = url.dir === 'Asc' || url.dir === 'Desc' ? url.dir : naturalDirection(sortBy);
-  const size = (PAGE_SIZES as readonly number[]).includes(Number(url.size)) ? Number(url.size) : 20;
+  const size = (PAGE_SIZES as readonly number[]).includes(Number(url.size))
+    ? Number(url.size)
+    : preferences.pageSize;
   const page = Math.max(1, Math.trunc(Number(url.page)) || 1);
   const query: UserQuery = {
     Search: search || undefined,
@@ -95,6 +99,13 @@ export function AdminUsersPage() {
             </Link>
             {user.id === me?.id ? <span className="text-muted-foreground"> (you)</span> : null}
             <p className="truncate text-xs text-muted-foreground">{user.email}</p>
+            {/* Phones: the Status column is hidden, so a deactivated/unverified account must still stand out. */}
+            {!user.isActive || !user.emailConfirmed ? (
+              <span className="mt-1 flex flex-wrap gap-1 md:hidden">
+                {user.isActive ? null : <Badge variant="danger">Deactivated</Badge>}
+                {user.emailConfirmed ? null : <Badge variant="warning">Unverified</Badge>}
+              </span>
+            ) : null}
           </div>
         </div>
       ),

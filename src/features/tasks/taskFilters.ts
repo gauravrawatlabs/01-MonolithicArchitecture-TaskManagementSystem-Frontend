@@ -31,6 +31,7 @@ export const SORT_FIELDS: readonly TaskSortField[] = [
   'UpdatedAt',
 ];
 export const PAGE_SIZES = [10, 20, 50, 100] as const;
+const DEFAULT_PAGE_SIZE = 20;
 export const DUE_PRESETS = {
   overdue: 'Overdue',
   today: 'Due today',
@@ -91,7 +92,7 @@ export function toTaskQuery(
     SortBy: sortBy,
     SortDirection: url.dir === 'Asc' || url.dir === 'Desc' ? url.dir : defaultDirection(sortBy),
     Page: Math.max(1, Math.trunc(Number(url.page)) || 1),
-    PageSize: (PAGE_SIZES as readonly number[]).includes(size) ? size : 20,
+    PageSize: (PAGE_SIZES as readonly number[]).includes(size) ? size : DEFAULT_PAGE_SIZE,
     ...fixed,
   };
 }

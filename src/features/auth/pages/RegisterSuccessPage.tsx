@@ -11,10 +11,10 @@ import { maskEmail } from '@/utils/maskEmail';
 
 import { AuthPageHeader } from '../components/AuthPageHeader';
 import { EmailForm } from '../components/EmailForm';
+import { RESEND_COOLDOWN_SECONDS } from '../constants';
 import { useResendConfirmationMutation } from '../hooks/useAuthMutations';
 import { readRegisteredEmail } from '../types';
 
-export const RESEND_COOLDOWN_SECONDS = 60;
 const SENT_MESSAGE = 'If the account exists and is not confirmed yet, a new link is on its way.';
 
 /**

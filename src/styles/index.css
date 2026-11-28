@@ -64,6 +64,16 @@
     outline-offset: 2px;
   }
 
+  /* The OS setting, or the in-app "Reduce motion" preference (class on <html>, Settings › Appearance). */
+  html.reduce-motion *,
+  html.reduce-motion ::before,
+  html.reduce-motion ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     ::before,
