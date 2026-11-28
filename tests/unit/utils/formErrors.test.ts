@@ -43,6 +43,27 @@ describe('applyServerErrors', () => {
     expect(setError).not.toHaveBeenCalledWith('root.server', expect.anything());
   });
 
+  it('maps an API field name to a differently named form field (fieldAliases)', () => {
+    const setError = vi.fn();
+    const error = new ApiError({
+      kind: 'validation',
+      status: 400,
+      fieldErrors: { dueDateUtc: ['Due date must be in the future.'] },
+    });
+
+    applyServerErrors<{ dueDate: string }>(setError, error, {
+      fields: ['dueDate'],
+      fieldAliases: { dueDateUtc: 'dueDate' },
+    });
+
+    expect(setError).toHaveBeenCalledWith(
+      'dueDate',
+      { type: 'server', message: 'Due date must be in the future.' },
+      { shouldFocus: true },
+    );
+    expect(setError).not.toHaveBeenCalledWith('root.server', expect.anything());
+  });
+
   it('maps indexed keys (roles[0]) to nested paths', () => {
     const setError = vi.fn();
     applyServerErrors<Values>(

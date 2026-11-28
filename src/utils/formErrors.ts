@@ -13,6 +13,11 @@ export interface ApplyServerErrorsOptions<TValues extends FieldValues> {
    * Example: register → { 409: 'email' } ("An account with this email already exists").
    */
   statusToField?: Partial<Record<number, Path<TValues>>>;
+  /**
+   * API field name → form field name, when they differ. Example: the API validates `dueDateUtc` while the
+   * form edits a local `dueDate` → { dueDateUtc: 'dueDate' }.
+   */
+  fieldAliases?: Partial<Record<string, Path<TValues>>>;
 }
 
 /** "roles[0]" (ASP.NET style) → "roles.0" (React Hook Form path). */
@@ -29,7 +34,7 @@ export function toFormPath(serverKey: string): string {
 export function applyServerErrors<TValues extends FieldValues>(
   setError: UseFormSetError<TValues>,
   error: unknown,
-  { fields, statusToField = {} }: ApplyServerErrorsOptions<TValues>,
+  { fields, statusToField = {}, fieldAliases = {} }: ApplyServerErrorsOptions<TValues>,
 ): void {
   const apiError = toApiError(error);
   const known = new Set<string>(fields);
@@ -37,7 +42,8 @@ export function applyServerErrors<TValues extends FieldValues>(
   let focused = false;
 
   for (const [key, messages] of Object.entries(apiError.fieldErrors)) {
-    const path = toFormPath(key);
+    const formKey = fieldAliases[key] ?? key;
+    const path = toFormPath(formKey);
     const rootField = path.split('.')[0] ?? path;
     if (known.has(rootField)) {
       setError(

@@ -214,7 +214,7 @@ export function createAppRoutes(): RouteObject[] {
                               path: 'tasks',
                               handle: handle({ breadcrumb: 'Tasks' }),
                               ...lazyPage(
-                                () => import('@/features/projects/pages/ProjectTasksPage'),
+                                () => import('@/features/tasks/pages/ProjectTasksPage'),
                                 (m) => m.ProjectTasksPage,
                               ),
                             },

@@ -14,8 +14,8 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
 | 8 | Dashboard | **Verified** (2026-11-27) | 37 new Vitest (318 total) · 5 e2e ×3 · 1 real-API | 318/318 + 93/93 + 3/3 | ✅ | [08-Phase8-Dashboard.md](08-Phase8-Dashboard.md) |
 | 9 | Category management | **Verified** (2026-11-27) | 19 new Vitest (337 total) · 3 e2e ×3 · real-API 1 (+1 admin, skipped) | 337/337 + 102/102 + 4/4 (1 skipped) | ✅ | [09-Phase9-Category-Management.md](09-Phase9-Category-Management.md) |
 | 10 | Project management | **Verified** (2026-11-27) | 36 new Vitest (373 total) · 3 e2e ×3 · real-API 1 (+1 admin, skipped) | 373/373 + 111/111 (×3) + 5/5 (2 skipped) | ✅ | [10-Phase10-Project-Management.md](10-Phase10-Project-Management.md) |
-| 11 | Task management | Pending | | | | Waiting for approval to start |
-| 12 | Kanban board and comments | Pending | | | | |
+| 11 | Task management | **Verified** (2026-11-28) | 56 new Vitest (429 total) · 3 e2e ×3 · real-API 1 (+1 admin, skipped) | 429/429 + 120/120 (×2) + 6/6 (3 skipped) | ✅ | [11-Phase11-Task-Management.md](11-Phase11-Task-Management.md) |
+| 12 | Kanban board and comments | Pending | | | | Waiting for approval to start |
 | 13 | Team and user management | Pending | | | | |
 | 14 | Settings and responsiveness | Pending | | | | |
 | 15 | Complete testing and QA | Pending | | | | |
@@ -184,3 +184,20 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
   build, 6 workers, axe waits for colour transitions). Details in 10 §5.
 - **Pending issues:** none in the frontend. Backend observation (not changed): user lookup can't match a full name.
 - **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-27.
+
+## Phase 11 — Task management
+
+- **Tasks completed:** task lists (All, My tasks, project tab) with server-side search/filters/sort/paging in the
+  URL; create/edit with local due dates converted to UTC and the API's date rules checked first; task page with
+  workflow-based status moves, assignment, edit, delete; per-user actions mirroring the API (incl. verified email).
+- **Files created/modified:** see [11 §4](11-Phase11-Task-Management.md#4-files).
+- **Tests written:** 56 Vitest tests (36 unit, 20 integration); `e2e/tasks.spec.ts` (3 × 3); real-API
+  `e2e/backend/tasks.backend.spec.ts` (regular user in two layers + optional admin flow).
+- **Tests passed:** Vitest 429/429 · Playwright UI 120/120 on 2 consecutive runs · real API 6 passed, 3 skipped
+  (admin flows need `E2E_ADMIN_EMAIL`/`E2E_ADMIN_PASSWORD`).
+- **Build status:** ✅ `npm run verify`.
+- **Defects found and fixed:** missed verified-email rule for task writes; lost URL updates on quick successive
+  changes (`useUrlState`); unnatural first sort direction; unchanged due date counted as changed; filters crowding
+  phones. Details in 11 §5.
+- **Pending issues:** none.
+- **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-28.

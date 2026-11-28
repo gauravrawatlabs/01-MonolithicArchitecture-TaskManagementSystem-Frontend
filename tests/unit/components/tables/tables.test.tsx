@@ -62,6 +62,46 @@ describe('DataTable', () => {
     expect(onSortChange).toHaveBeenLastCalledWith({ columnId: 'Title', direction: 'Desc' });
   });
 
+  it('starts a column in its natural direction (firstSortDirection), then toggles', async () => {
+    const onSortChange = vi.fn();
+    const priority: DataTableColumn<Row>[] = [
+      { id: 'Title', header: 'Title', sortable: true, cell: (row) => row.title },
+      {
+        id: 'Priority',
+        header: 'Priority',
+        sortable: true,
+        firstSortDirection: 'Desc',
+        cell: () => 'High',
+      },
+    ];
+    const { rerender } = render(
+      <DataTable
+        caption="Tasks"
+        columns={priority}
+        rows={rows}
+        getRowId={(row) => row.id}
+        sort={{ columnId: 'Title', direction: 'Asc' }}
+        onSortChange={onSortChange}
+      />,
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: 'Priority' }));
+    expect(onSortChange).toHaveBeenLastCalledWith({ columnId: 'Priority', direction: 'Desc' });
+
+    rerender(
+      <DataTable
+        caption="Tasks"
+        columns={priority}
+        rows={rows}
+        getRowId={(row) => row.id}
+        sort={{ columnId: 'Priority', direction: 'Desc' }}
+        onSortChange={onSortChange}
+      />,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Priority' }));
+    expect(onSortChange).toHaveBeenLastCalledWith({ columnId: 'Priority', direction: 'Asc' });
+  });
+
   it('does not render sort buttons for non-sortable columns', () => {
     render(
       <DataTable

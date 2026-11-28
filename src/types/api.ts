@@ -53,3 +53,7 @@ export type ProjectQuery = NonNullable<operations['Projects_GetProjects']['param
 export type CreateProjectRequest = Schemas['CreateProjectRequest'];
 export type UpdateProjectRequest = Schemas['UpdateProjectRequest'];
 export type UserLookup = Schemas['UserLookupResponse'];
+
+// Task writes (Phase 11)
+export type CreateTaskRequest = Schemas['CreateTaskRequest'];
+export type UpdateTaskRequest = Schemas['UpdateTaskRequest'];

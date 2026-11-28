@@ -4,8 +4,8 @@ A React + TypeScript single-page application for the
 [Task Management System API](https://github.com/gauravrawatlabs/01-MonolithicArchitecture-TaskManagementSystem)
 (ASP.NET Core 10 Web API, monolithic architecture, SQL Server, JWT + refresh tokens, role-based authorization).
 
-> **Status: Phase 10 of 17 (project management).** Authentication, dashboard, categories and projects (list, details,
-> members) are complete. Tasks follow in Phase 11.
+> **Status: Phase 11 of 17 (task management).** Authentication, dashboard, categories, projects and tasks (lists,
+> filters, workflow, assignment) are complete. The Kanban board and comments follow in Phase 12.
 > The project is built phase by phase as a learning project; see the [progress tracker](docs/00-Progress-Tracker.md).
 
 ## Architecture at a glance
@@ -42,6 +42,7 @@ ESLint · Prettier
 | 08 | [Dashboard](docs/08-Phase8-Dashboard.md) | TanStack Query reads, chart choice and accessibility, states, lazy charts |
 | 09 | [Category management](docs/09-Phase9-Category-Management.md) | First full CRUD: mutations and cache, URL state, permissions, delete confirmation |
 | 10 | [Project management](docs/10-Phase10-Project-Management.md) | Server-side paging and search, details layout with tabs, accessible member picker |
+| 11 | [Task management](docs/11-Phase11-Task-Management.md) | Filters in the URL, status workflow and per-user actions, local ⇄ UTC due dates |
 
 ## Getting started
 

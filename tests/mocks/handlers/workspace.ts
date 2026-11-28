@@ -17,4 +17,5 @@ export const workspaceHandlers = [
     HttpResponse.json(buildProjectDetails({ id: Number(params.id), name: 'Website Redesign' })),
   ),
   http.get(apiUrl('/api/users/lookup'), () => HttpResponse.json([])),
+  http.get(apiUrl('/api/categories'), () => HttpResponse.json([])),
 ];

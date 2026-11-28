@@ -11,6 +11,11 @@ export interface DataTableColumn<TRow> {
   header: string;
   cell: (row: TRow) => ReactNode;
   sortable?: boolean;
+  /**
+   * Direction of the FIRST click on this column (default Asc). Use Desc where "most first" is the natural
+   * order, e.g. priority (most urgent first) or "updated" (newest first).
+   */
+  firstSortDirection?: SortDirection;
   /** Hide on small screens to keep the table readable. */
   hideBelow?: 'md' | 'lg';
   className?: string;
@@ -56,8 +61,9 @@ export function DataTable<TRow>({
 }: DataTableProps<TRow>) {
   const handleSort = (columnId: string) => {
     if (!onSortChange) return;
-    const direction: SortDirection =
-      sort?.columnId === columnId && sort.direction === 'Asc' ? 'Desc' : 'Asc';
+    const first = columns.find((column) => column.id === columnId)?.firstSortDirection ?? 'Asc';
+    let direction: SortDirection = first;
+    if (sort?.columnId === columnId) direction = sort.direction === 'Asc' ? 'Desc' : 'Asc';
     onSortChange({ columnId, direction });
   };
 
