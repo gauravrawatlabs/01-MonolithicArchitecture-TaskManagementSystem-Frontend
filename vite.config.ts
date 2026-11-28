@@ -22,6 +22,8 @@ export default defineConfig(({ command, mode }) => {
   }
 
   return {
+    // Where the app is served from: "/" (default) or a sub-path such as "/my-repo/" (GitHub Pages).
+    base: process.env.VITE_BASE_PATH ?? '/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {

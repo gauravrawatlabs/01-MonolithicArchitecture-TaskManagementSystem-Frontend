@@ -1,0 +1,59 @@
+# GitHub Pages (manual): Actions → "GitHub Pages" → Run workflow.
+# One-time setup: Settings → Pages → Source: GitHub Actions; Settings → Secrets and variables → Actions →
+# Variables: VITE_API_BASE_URL = the public API URL. The API must allow https://<owner>.github.io (CORS).
+# Limits of Pages: no custom HTTP headers (so no CSP header / clickjacking protection), and unknown paths are
+# answered by 404.html (a copy of the app), i.e. deep links work but with HTTP status 404.
+name: GitHub Pages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Check the API URL is configured
+        env:
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
+        run: |
+          if [ -z "$VITE_API_BASE_URL" ]; then
+            echo "::error::Set the repository variable VITE_API_BASE_URL (Settings → Secrets and variables → Actions)."
+            exit 1
+          fi
+      - run: npm ci
+      - name: Build for https://<owner>.github.io/<repository>/
+        env:
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
+          VITE_BASE_PATH: /${{ github.event.repository.name }}/
+        run: |
+          npx vite build
+          cp dist/index.html dist/404.html
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
