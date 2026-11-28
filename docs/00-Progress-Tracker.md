@@ -16,8 +16,8 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
 | 10 | Project management | **Verified** (2026-11-27) | 36 new Vitest (373 total) · 3 e2e ×3 · real-API 1 (+1 admin, skipped) | 373/373 + 111/111 (×3) + 5/5 (2 skipped) | ✅ | [10-Phase10-Project-Management.md](10-Phase10-Project-Management.md) |
 | 11 | Task management | **Verified** (2026-11-28) | 56 new Vitest (429 total) · 3 e2e ×3 · real-API 1 (+1 admin, skipped) | 429/429 + 120/120 (×2) + 6/6 (3 skipped) | ✅ | [11-Phase11-Task-Management.md](11-Phase11-Task-Management.md) |
 | 12 | Kanban board and comments | **Verified** (2026-11-28) | 25 new Vitest (454 total) · 4 e2e ×3 · real-API 1 (+1 admin, skipped) | 454/454 + 130/130 (×2, 2 skipped) + 7/7 (4 skipped) | ✅ | [12-Phase12-Kanban-Board-and-Comments.md](12-Phase12-Kanban-Board-and-Comments.md) |
-| 13 | Team and user management | Pending | | | | Waiting for approval to start |
-| 14 | Settings and responsiveness | Pending | | | | |
+| 13 | Team and user management | **Verified** (2026-11-28) | 21 new Vitest (475 total) · 3 e2e ×3 · real-API 1 (+1 admin, skipped) | 475/475 (×3) + 139/139 (×2, 2 skipped) + 8/8 (5 skipped) | ✅ | [13-Phase13-Team-and-User-Management.md](13-Phase13-Team-and-User-Management.md) |
+| 14 | Settings and responsiveness | Pending | | | | Waiting for approval to start |
 | 15 | Complete testing and QA | Pending | | | | |
 | 16 | Performance and security review | Pending | | | | Re-evaluate HttpOnly refresh-token cookie |
 | 17 | Deployment and GitHub | Pending | | | | |
@@ -216,5 +216,20 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
 - **Build status:** ✅ `npm run verify`; the board (dnd-kit) is a lazy chunk of 17.8 kB gzip.
 - **Defects found and fixed:** focus lost after a move; pickup announcement overwritten; page-wide sideways
   scrolling on the board (grid sizing + sr-only escaping overflow). Details in 12 §5.
+- **Pending issues:** none.
+- **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-28.
+
+## Phase 13 — Team and user management
+
+- **Tasks completed:** profile (view + edit name/job title, header follows); Team from project memberships (G5)
+  with member pages; Admin overview counts; Admin › Users directory (server-side filters/sort/paging in the URL);
+  per-account roles editor and activate/deactivate, with self-protection and visible reasons.
+- **Files created/modified:** see [13 §4](13-Phase13-Team-and-User-Management.md#4-files).
+- **Tests written:** 21 Vitest tests (6 unit, 15 integration); `e2e/users.spec.ts` (3 × 3); real-API
+  `e2e/backend/users.backend.spec.ts` (regular user + optional admin flow).
+- **Tests passed:** Vitest 475/475 (×3) · Playwright UI 139/139 on 2 consecutive runs (2 skipped by design) ·
+  real API 8 passed, 5 skipped (admin flows need `E2E_ADMIN_EMAIL`/`E2E_ADMIN_PASSWORD`).
+- **Build status:** ✅ `npm run verify`.
+- **Defects found and fixed:** run-together accessible name on team cards (stretched link); a racy test. Details in 13 §5.
 - **Pending issues:** none.
 - **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-28.

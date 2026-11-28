@@ -61,3 +61,9 @@ export type UpdateTaskRequest = Schemas['UpdateTaskRequest'];
 // Comments (Phase 12)
 export type Comment = Schemas['CommentResponse'];
 export type PagedComments = Schemas['PagedResultOfCommentResponse'];
+
+// Users (Phase 13)
+export type PagedUsers = Schemas['PagedResultOfUserProfileResponse'];
+export type UserQuery = NonNullable<operations['Users_GetUsers']['parameters']['query']>;
+export type UserSortField = Schemas['UserSortField'];
+export type UpdateProfileRequest = Schemas['UpdateProfileRequest'];
