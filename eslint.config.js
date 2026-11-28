@@ -138,6 +138,12 @@ export default defineConfig([
     languageOptions: { globals: globals.node },
   },
 
+  // Plain scripts served as-is to the browser (e.g. public/config.js, the runtime configuration).
+  {
+    files: ['public/**/*.js'],
+    languageOptions: { globals: globals.browser, sourceType: 'script' },
+  },
+
   // Must be last: turns off formatting rules that Prettier owns.
   prettier,
 ]);

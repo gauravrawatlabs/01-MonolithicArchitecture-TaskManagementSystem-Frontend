@@ -45,5 +45,37 @@ export function parseEnv(raw: Record<string, unknown>): AppEnv {
   });
 }
 
+/** Optional runtime configuration from /config.js (see public/config.js). */
+export interface RuntimeConfig {
+  apiBaseUrl?: string;
+  appName?: string;
+}
+
+declare global {
+  interface Window {
+    __APP_CONFIG__?: RuntimeConfig;
+  }
+}
+
+/**
+ * Build-time variables, overridden by non-empty runtime values. This is what lets ONE build (e.g. a Docker
+ * image) be configured per environment at start-up instead of being rebuilt.
+ */
+export function withRuntimeConfig(
+  buildTime: Record<string, unknown>,
+  runtime: RuntimeConfig | undefined,
+): Record<string, unknown> {
+  return {
+    ...buildTime,
+    ...(runtime?.apiBaseUrl ? { VITE_API_BASE_URL: runtime.apiBaseUrl } : {}),
+    ...(runtime?.appName ? { VITE_APP_NAME: runtime.appName } : {}),
+  };
+}
+
 /** The validated configuration. Import this instead of reading import.meta.env directly. */
-export const env: AppEnv = parseEnv(import.meta.env);
+export const env: AppEnv = parseEnv(
+  withRuntimeConfig(
+    import.meta.env,
+    typeof window === 'undefined' ? undefined : window.__APP_CONFIG__,
+  ),
+);
