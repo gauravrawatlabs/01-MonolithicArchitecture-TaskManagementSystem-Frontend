@@ -1,6 +1,6 @@
 # Phase 17 — Deployment and GitHub
 
-> Status: **Testing complete — awaiting approval**. Builds on [Phase 16 — Performance and security review](16-Phase16-Performance-and-Security-Review.md).
+> Status: **✅ Verified — approved 2026-11-28; CI green on GitHub**. Builds on [Phase 16 — Performance and security review](16-Phase16-Performance-and-Security-Review.md).
 > The hosting target isn't decided yet, so **every common option is prepared**, each in its own commit. Pick one
 > when you deploy; the others stay ready.
 
@@ -140,9 +140,13 @@ On Windows Git Bash, set `MSYS_NO_PATHCONV=1` too, because Git Bash rewrites `/�
 - **e2e:** Playwright UI tests on desktop, tablet and phone, plus the security-header check. The report is uploaded
   on failure.
 
-The real-API tests stay local (they need the API and SQL Server). The quality job was run step by step in a fresh
-clone on Windows and passed. **The workflows first run on GitHub (Linux) after the push**, which is the final
-check of this phase.
+The real-API tests stay local (they need the API and SQL Server).
+
+**First run on GitHub (Linux):** the Docker workflow and the quality job passed, but the e2e job failed before any
+test ran. Vite 8 refuses a second `vite preview` in the same project, and in CI both e2e servers are previews
+(:3000 and :4173). Locally this was hidden, because the dev server on :3000 was reused. Fixed with `--bypass-lock`
+(safe: each preview serves its own folder), reproduced and verified locally, then pushed. **Second run: all
+green**: quality ✅, e2e 144 passed / 2 skipped ✅, Docker image ✅.
 
 ## 10. Common mistakes
 | Mistake | Avoid it by |
