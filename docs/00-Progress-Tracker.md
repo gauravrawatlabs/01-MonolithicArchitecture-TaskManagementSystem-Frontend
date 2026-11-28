@@ -20,7 +20,7 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
 | 14 | Settings and responsiveness | **Verified** (2026-11-28) | 12 new Vitest (487 total) · responsive sweep (22 pages × 3) · real-API 1 | 487/487 + 142/142 (×2, 2 skipped) + 9/9 (5 skipped) | ✅ | [14-Phase14-Settings-and-Responsiveness.md](14-Phase14-Settings-and-Responsiveness.md) |
 | 15 | Complete testing and QA | **Verified** (2026-11-28) | 10 new Vitest (497 total) · real-API journey (+1, admin) | 497/497 (5 stable runs) + 142/142 (×2) + 9/9 (6 skipped) | ✅ | [15-Phase15-Complete-Testing-and-QA.md](15-Phase15-Complete-Testing-and-QA.md) |
 | 16 | Performance and security review | **Verified** (2026-11-28) | 1 new Vitest (498 total) · CSP e2e (2) | 498/498 + 144/144 (×2, 2 skipped) + 9/9 (6 skipped) | ✅ | [16-Phase16-Performance-and-Security-Review.md](16-Phase16-Performance-and-Security-Review.md) · refresh token storage: **option A kept** (no change chosen yet, 16 §3.4) |
-| 17 | Deployment and GitHub | Pending | | | | Waiting for approval to start |
+| 17 | Deployment and GitHub | Testing complete (awaiting approval) | 6 new Vitest (507 total) · Docker/nginx/sub-path verified in containers and browsers | 507/507 + 144/144 + Docker checks | ✅ | [17-Phase17-Deployment-and-GitHub.md](17-Phase17-Deployment-and-GitHub.md) · CI first runs on GitHub after the push |
 
 ## Phase 1 — Requirements and UI/UX design
 
@@ -281,4 +281,22 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
   probe violated a strict CSP (`jitless`). Details in 16 §2–3.
 - **Pending issues:** refresh-token storage stays on option A (localStorage) until the owner chooses otherwise (16 §3.4).
 - **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-28.
+
+## Phase 17 — Deployment and GitHub
+
+- **Tasks completed:** runtime configuration (`config.js`); CI workflow; Docker image (non-root nginx, runtime API
+  address + CSP, health check, read-only support, GHCR publishing on tags); nginx site for VMs/EC2; generated
+  configs for IIS/App Service, Azure Static Web Apps, Netlify/Cloudflare Pages and Vercel from the one headers file;
+  GitHub Pages workflow with sub-path support; deployment guide. Seven commits (17.1–17.7), one per option.
+- **Files created/modified:** see [17 §2](17-Phase17-Deployment-and-GitHub.md#2-commits-of-this-phase).
+- **Tests written:** 6 Vitest tests for the generator + 3 for runtime configuration (507 total).
+- **Tests passed:** Vitest 507/507 · Playwright UI 144/144 · Docker image, read-only Compose and VM nginx verified
+  in containers; Docker and sub-path builds verified in a real browser; CI quality steps run in a fresh clone.
+- **Not verified here:** Azure SWA / Netlify / Vercel / IIS on the real services (files unit-tested only); the
+  GitHub workflows' first run (after the push).
+- **Build status:** ✅
+- **Defects found and fixed:** config.js values lost by shell escaping (caught by container test); read-only
+  Compose hiding the headers template (caught by running it); Windows CRLF risk for the container script
+  (`.gitattributes`); a jsdom/node URL incompatibility in the generator's tests.
+- **Final verification status:** all checks pass, awaiting your approval.
 

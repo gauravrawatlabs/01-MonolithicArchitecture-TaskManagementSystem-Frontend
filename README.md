@@ -4,9 +4,10 @@ A React + TypeScript single-page application for the
 [Task Management System API](https://github.com/gauravrawatlabs/01-MonolithicArchitecture-TaskManagementSystem)
 (ASP.NET Core 10 Web API, monolithic architecture, SQL Server, JWT + refresh tokens, role-based authorization).
 
-> **Status: Phase 16 of 17 (performance and security review).** All features are built and tested at three levels; see the
-> [QA report](docs/15-Phase15-Complete-Testing-and-QA.md) for coverage, how to run everything and known limitations.
-> Performance and security reviewed in Phase 16; deployment follows in Phase 17.
+> **Status: all 17 phases built.** Every feature is tested at three levels ([QA report](docs/15-Phase15-Complete-Testing-and-QA.md)),
+> performance and security are reviewed ([Phase 16](docs/16-Phase16-Performance-and-Security-Review.md)), and the app
+> is ready to deploy to Docker, a VM/EC2, IIS/Azure App Service, static hosts or GitHub Pages
+> ([deployment guide](docs/17-Phase17-Deployment-and-GitHub.md)).
 > The project is built phase by phase as a learning project; see the [progress tracker](docs/00-Progress-Tracker.md).
 
 ## Architecture at a glance
@@ -22,7 +23,7 @@ A React + TypeScript single-page application for the
 - The backend stays **one monolithic API**; this frontend is a separate application.
 - **Frontend authorization is only for user experience.** The API enforces every rule.
 
-## Planned technology stack
+## Technology stack
 
 React · TypeScript (strict) · Vite · Tailwind CSS · React Router · Axios · TanStack Query ·
 React Hook Form · Zod · Recharts · Lucide React · dnd-kit · Vitest · React Testing Library · MSW · Playwright ·
@@ -49,6 +50,7 @@ ESLint · Prettier
 | 14 | [Settings and responsiveness](docs/14-Phase14-Settings-and-Responsiveness.md) | Device preferences, account verification, a 22-page × 3-viewport sweep |
 | 15 | [Complete testing and QA](docs/15-Phase15-Complete-Testing-and-QA.md) | Coverage-guided gaps, a token-refresh race fixed, stability runs, QA report |
 | 16 | [Performance and security review](docs/16-Phase16-Performance-and-Security-Review.md) | Measured bundle and load times, a tested CSP, token-storage decision |
+| 17 | [Deployment and GitHub](docs/17-Phase17-Deployment-and-GitHub.md) | CI, runtime config, Docker, nginx, IIS, static hosts, GitHub Pages |
 
 ## Getting started
 
@@ -81,3 +83,19 @@ npm run dev                 # http://localhost:3000 (the backend's CORS and emai
 `.env.development` and `.env.test` are committed (public values only). For a local production build, copy
 `.env.example` to `.env.production.local`. In CI/hosting, set real environment variables.
 **Everything in `VITE_*` variables is public, so never put secrets there.**
+
+## Deployment
+
+The same build can be deployed in several ways; pick one (details: [deployment guide](docs/17-Phase17-Deployment-and-GitHub.md)).
+
+| Target | Command / file |
+|---|---|
+| Docker (VM, EC2, Azure Web App for Containers, ECS, Kubernetes) | `docker build -t tms-frontend .` then `docker run -p 80:8080 -e API_BASE_URL=https://api.example.com tms-frontend` |
+| nginx on a VM / EC2 | `deploy/nginx/tms.conf` + `node scripts/host-configs.mjs nginx --api-origin <api>` |
+| IIS / Azure App Service (Windows), Azure Static Web Apps, Netlify, Cloudflare Pages, Vercel | `VITE_API_BASE_URL=<api> npm run build:static` (writes each host's file into `dist/`) |
+| GitHub Pages | Actions → "GitHub Pages" → Run workflow (manual) |
+
+The API address can also be changed **after** building, in `config.js`. For every target, the backend must allow
+the frontend's origin (`Cors:AllowedOrigins`) and know its URL (`Email:ClientAppBaseUrl`).
+Continuous integration (`.github/workflows/ci.yml`) checks every push and pull request.
+
