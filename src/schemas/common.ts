@@ -1,6 +1,13 @@
 import { z } from 'zod';
 
 /**
+ * No "JIT" in Zod: by default it probes once whether `new Function` is allowed, which a strict
+ * Content-Security-Policy (script-src without 'unsafe-eval', see deploy/security-headers.json) reports as a
+ * violation. Every form schema imports this module, so the setting applies before any schema is used.
+ */
+z.config({ jitless: true });
+
+/**
  * Reusable Zod building blocks. Limits and messages mirror the backend's FluentValidation rules
  * and Identity options, so the browser rejects exactly what the server would (and says it the same way).
  * Client validation is for fast feedback; the server remains the authority.
@@ -76,4 +83,24 @@ export function requiredText(label: string, maxLength: number) {
     .trim()
     .min(1, `${label} is required.`)
     .max(maxLength, `${label} must be ${maxLength} characters or fewer.`);
+}
+
+/** Passwords-match check that runs as soon as both fields have a value (not only when all else is valid). */
+export function passwordsMatch<T extends z.ZodType<Record<string, unknown>>>(
+  schema: T,
+  passwordField: string,
+  confirmField: string,
+) {
+  return schema.refine((values) => values[passwordField] === values[confirmField], {
+    path: [confirmField],
+    error: 'Passwords do not match.',
+    when: (payload) => {
+      const value = payload.value as Record<string, unknown>;
+      return (
+        typeof value[passwordField] === 'string' &&
+        typeof value[confirmField] === 'string' &&
+        value[confirmField] !== ''
+      );
+    },
+  });
 }

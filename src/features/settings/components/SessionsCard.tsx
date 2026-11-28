@@ -6,8 +6,7 @@ import { Button } from '@/components/common/Button';
 import { Card, CardContent, CardHeader } from '@/components/common/Card';
 import { ConfirmDialog } from '@/components/feedback/ConfirmDialog';
 import { useToast } from '@/contexts/toast';
-
-import { useLogoutAllMutation } from '../hooks/useAuthMutations';
+import { useLogoutAllMutation } from '@/features/auth';
 
 /**
  * Settings › Security: POST /api/auth/logout-all revokes every refresh token of this user, on every

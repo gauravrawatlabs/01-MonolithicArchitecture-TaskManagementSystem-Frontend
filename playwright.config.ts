@@ -2,6 +2,8 @@ import { defineConfig, devices } from '@playwright/test';
 
 const isCI = Boolean(process.env.CI);
 const baseURL = 'http://localhost:3000';
+/** A separate build for the security-header check: never a reused dev server (it injects inline scripts). */
+const cspURL = 'http://localhost:4173';
 
 /**
  * End-to-end tests run in a real browser against the running app (and, from Phase 7 on,
@@ -26,13 +28,27 @@ export default defineConfig({
   },
   projects: [
     // UI tests: no backend needed (API calls are faked with page.route where required).
-    { name: 'desktop', testIgnore: '**/*.backend.spec.ts', use: { ...devices['Desktop Chrome'] } },
+    {
+      name: 'desktop',
+      testIgnore: ['**/*.backend.spec.ts', '**/security-headers.spec.ts'],
+      use: { ...devices['Desktop Chrome'] },
+    },
     {
       name: 'tablet',
-      testIgnore: '**/*.backend.spec.ts',
+      testIgnore: ['**/*.backend.spec.ts', '**/security-headers.spec.ts'],
       use: { ...devices['iPad Mini'], browserName: 'chromium' },
     },
-    { name: 'mobile', testIgnore: '**/*.backend.spec.ts', use: { ...devices['Pixel 7'] } },
+    {
+      name: 'mobile',
+      testIgnore: ['**/*.backend.spec.ts', '**/security-headers.spec.ts'],
+      use: { ...devices['Pixel 7'] },
+    },
+    // The recommended Content-Security-Policy (deploy/security-headers.json) against a fresh BUILD on :4173.
+    {
+      name: 'security',
+      testMatch: '**/security-headers.spec.ts',
+      use: { ...devices['Desktop Chrome'], baseURL: cspURL },
+    },
     // Full flows against the REAL ASP.NET Core API (must be running): npm run test:e2e:backend
     // A real backend (debug build, real database, exceptions for 401/400) answers far slower than a
     // fake, so assertions there may wait up to 15 s instead of the default 5 s.
@@ -47,11 +63,20 @@ export default defineConfig({
   // ~11 parallel browsers, one dev server became the bottleneck and tests timed out on a busy machine.
   // NODE_ENV=development keeps dev-only routes (design system) and React's development checks.
   // Locally, an already running server on :3000 (e.g. `npm run dev`) is reused.
-  webServer: {
-    command: 'npm run e2e:serve',
-    env: { NODE_ENV: 'development' },
-    url: baseURL,
-    reuseExistingServer: !isCI,
-    timeout: 120_000,
-  },
+  webServer: [
+    {
+      command: 'npm run e2e:serve',
+      env: { NODE_ENV: 'development' },
+      url: baseURL,
+      reuseExistingServer: !isCI,
+      timeout: 120_000,
+    },
+    {
+      command: 'npm run e2e:serve:csp',
+      env: { NODE_ENV: 'development' },
+      url: cspURL,
+      reuseExistingServer: false,
+      timeout: 120_000,
+    },
+  ],
 });

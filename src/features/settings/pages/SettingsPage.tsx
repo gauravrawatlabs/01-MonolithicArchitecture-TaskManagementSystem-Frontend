@@ -4,9 +4,10 @@ import { Card, CardContent, CardHeader } from '@/components/common/Card';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { TabNav } from '@/components/layout/TabNav';
 import { paths, SETTINGS_TABS, type SettingsTab } from '@/constants/routes';
-import { ChangePasswordForm, SessionsCard } from '@/features/auth';
 
 import { AccountSettings } from '../components/AccountSettings';
+import { ChangePasswordForm } from '../components/ChangePasswordForm';
+import { SessionsCard } from '../components/SessionsCard';
 import { AppearanceSettings } from '../components/AppearanceSettings';
 import { PreferenceSettings } from '../components/PreferenceSettings';
 

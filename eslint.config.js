@@ -35,6 +35,7 @@ export default defineConfig([
   globalIgnores([
     'dist',
     'dist-e2e',
+    'dist-csp',
     'coverage',
     'playwright-report',
     'test-results',

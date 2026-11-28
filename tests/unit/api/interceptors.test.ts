@@ -88,6 +88,22 @@ describe('auth interceptor', () => {
     expect(seen.filter((a) => a === 'Bearer FRESH')).toHaveLength(2);
   });
 
+  it('errors never carry the request (so logging an error can never print the access token)', async () => {
+    setSession(
+      buildAuthResponse(undefined, { accessToken: 'SECRET-ACCESS-TOKEN', refreshToken: 'R1' }),
+    );
+    server.use(http.get(apiUrl(PROTECTED), () => problem(500, { detail: 'Boom' })));
+
+    const error: unknown = await apiClient.get(PROTECTED).catch((e: unknown) => e);
+
+    expect(error).toBeInstanceOf(ApiError);
+    const everything = JSON.stringify(error, Object.getOwnPropertyNames(error)) + String(error);
+    expect(everything).not.toContain('SECRET-ACCESS-TOKEN');
+    expect(everything).not.toContain('Authorization');
+    expect(error).not.toHaveProperty('config');
+    expect(error).not.toHaveProperty('request');
+  });
+
   it('gives up with the original 401 when the refresh is rejected', async () => {
     signIn();
     protectedEndpoint('NEVER');

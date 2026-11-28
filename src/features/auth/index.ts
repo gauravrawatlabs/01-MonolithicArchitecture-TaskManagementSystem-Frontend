@@ -4,9 +4,6 @@
  */
 export { type AuthContextValue, type AuthStatus, type EndedSession } from './authContext';
 export { AuthProvider } from './AuthProvider';
-export { ChangePasswordForm } from './components/ChangePasswordForm';
-export { ResendConfirmationButton } from './components/ResendConfirmationButton';
-export { SessionsCard } from './components/SessionsCard';
 export {
   canLookupUsers,
   canCreateProjects,
@@ -18,3 +15,11 @@ export {
 } from './permissions';
 export { type LoginLocationState, type LoginNotice } from './types';
 export { useAuth } from './useAuth';
+export { RESEND_COOLDOWN_SECONDS } from './constants';
+// Mutation hooks for account management (Settings). Hooks and API only: no Zod schemas here, because this
+// file is part of the entry bundle (the app shell imports useAuth from it).
+export {
+  useChangePasswordMutation,
+  useLogoutAllMutation,
+  useResendConfirmationMutation,
+} from './hooks/useAuthMutations';

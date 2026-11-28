@@ -1,5 +1,6 @@
 dist
 dist-e2e
+dist-csp
 coverage
 node_modules
 playwright-report

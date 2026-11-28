@@ -1,5 +1,3 @@
-import { z } from 'zod';
-
 /**
  * Device preferences (Phase 1 gap G4): stored in THIS browser only (localStorage), never sent to the API.
  * Validated field by field on read: an old, partial or tampered value falls back to the default for that
@@ -26,10 +24,17 @@ export const DEFAULT_PREFERENCES: DevicePreferences = {
   motion: 'system',
 };
 
-const fields = {
-  pageSize: z.number().refine((n) => (PAGE_SIZE_OPTIONS as readonly number[]).includes(n)),
-  toastDuration: z.enum(['short', 'normal', 'long']),
-  motion: z.enum(['system', 'reduce']),
+/**
+ * Field validators. Plain checks, not Zod: this module loads at startup (PreferencesProvider), and Zod would add
+ * ~83 KB to the entry bundle (Phase 16).
+ */
+const fields: {
+  [K in keyof DevicePreferences]: (value: unknown) => value is DevicePreferences[K];
+} = {
+  pageSize: (v): v is DevicePreferences['pageSize'] =>
+    (PAGE_SIZE_OPTIONS as readonly unknown[]).includes(v),
+  toastDuration: (v): v is ToastDuration => v === 'short' || v === 'normal' || v === 'long',
+  motion: (v): v is MotionPreference => v === 'system' || v === 'reduce',
 };
 
 /** Parses a stored value; every invalid or missing field gets its default. */
@@ -42,8 +47,8 @@ export function parsePreferences(raw: string | null): DevicePreferences {
     // corrupt JSON: defaults
   }
   const pick = <K extends keyof DevicePreferences>(key: K): DevicePreferences[K] => {
-    const result = fields[key].safeParse(data[key]);
-    return result.success ? (result.data as DevicePreferences[K]) : DEFAULT_PREFERENCES[key];
+    const value = data[key];
+    return fields[key](value) ? value : DEFAULT_PREFERENCES[key];
   };
   return {
     pageSize: pick('pageSize'),

@@ -1,26 +1,6 @@
 import { z } from 'zod';
 
-import { emailSchema, passwordSchema, requiredText } from '@/schemas/common';
-
-/** Passwords-match check that runs as soon as both fields have a value (not only when all else is valid). */
-function passwordsMatch<T extends z.ZodType<Record<string, unknown>>>(
-  schema: T,
-  passwordField: string,
-  confirmField: string,
-) {
-  return schema.refine((values) => values[passwordField] === values[confirmField], {
-    path: [confirmField],
-    error: 'Passwords do not match.',
-    when: (payload) => {
-      const value = payload.value as Record<string, unknown>;
-      return (
-        typeof value[passwordField] === 'string' &&
-        typeof value[confirmField] === 'string' &&
-        value[confirmField] !== ''
-      );
-    },
-  });
-}
+import { emailSchema, passwordSchema, passwordsMatch, requiredText } from '@/schemas/common';
 
 /** Login only checks presence/format: the password policy is the server's business for existing accounts. */
 export const loginSchema = z.object({
@@ -54,25 +34,3 @@ export const resetPasswordSchema = passwordsMatch(
   'confirmPassword',
 );
 export type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
-
-export const changePasswordSchema = passwordsMatch(
-  z.object({
-    currentPassword: z.string().min(1, 'Current password is required.'),
-    newPassword: passwordSchema,
-    confirmPassword: z.string().min(1, 'Confirm your new password.'),
-  }),
-  'newPassword',
-  'confirmPassword',
-).refine((values) => values.newPassword !== values.currentPassword, {
-  path: ['newPassword'],
-  error: 'New password must be different from the current password.',
-  when: (payload) => {
-    const value = payload.value as Record<string, unknown>;
-    return (
-      typeof value.currentPassword === 'string' &&
-      value.currentPassword !== '' &&
-      typeof value.newPassword === 'string'
-    );
-  },
-});
-export type ChangePasswordFormValues = z.infer<typeof changePasswordSchema>;

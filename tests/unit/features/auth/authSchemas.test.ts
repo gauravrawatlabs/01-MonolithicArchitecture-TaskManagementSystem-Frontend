@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { changePasswordSchema, registerSchema } from '@/features/auth/schemas/authSchemas';
+import { registerSchema } from '@/features/auth/schemas/authSchemas';
+import { changePasswordSchema } from '@/features/settings/schemas/changePasswordSchema';
 
 const messagesFor = (
   result: { error?: { issues: { path: PropertyKey[]; message: string }[] } },

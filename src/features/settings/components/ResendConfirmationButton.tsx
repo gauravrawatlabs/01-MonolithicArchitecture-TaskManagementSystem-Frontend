@@ -2,9 +2,7 @@ import { getErrorMessage } from '@/api/apiError';
 import { Button } from '@/components/common/Button';
 import { useToast } from '@/contexts/toast';
 import { useCountdown } from '@/hooks/useCountdown';
-
-import { RESEND_COOLDOWN_SECONDS } from '../constants';
-import { useResendConfirmationMutation } from '../hooks/useAuthMutations';
+import { RESEND_COOLDOWN_SECONDS, useResendConfirmationMutation } from '@/features/auth';
 
 /**
  * Sends a new confirmation link to the signed-in user's address, then waits 60 s before allowing another

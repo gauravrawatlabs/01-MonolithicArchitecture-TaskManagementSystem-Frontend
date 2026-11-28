@@ -3,9 +3,11 @@ import { Link } from 'react-router';
 
 import { Card, CardContent, CardHeader } from '@/components/common/Card';
 import { paths } from '@/constants/routes';
-import { isEmailVerified, ResendConfirmationButton, useAuth } from '@/features/auth';
+import { isEmailVerified, useAuth } from '@/features/auth';
 import { RoleBadges } from '@/features/users';
 import { formatDate } from '@/utils/dates';
+
+import { ResendConfirmationButton } from './ResendConfirmationButton';
 
 /** Settings › Account: sign-in identity, verification (with resend), roles, and where to change what. */
 export function AccountSettings() {

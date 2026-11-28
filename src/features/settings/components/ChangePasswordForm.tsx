@@ -7,10 +7,12 @@ import { FormField } from '@/components/forms/FormField';
 import { PasswordChecklist } from '@/components/forms/PasswordChecklist';
 import { PasswordInput } from '@/components/forms/PasswordInput';
 import { applyServerErrors } from '@/utils/formErrors';
+import { useAuth, useChangePasswordMutation } from '@/features/auth';
 
-import { useChangePasswordMutation } from '../hooks/useAuthMutations';
-import { changePasswordSchema, type ChangePasswordFormValues } from '../schemas/authSchemas';
-import { useAuth } from '../useAuth';
+import {
+  changePasswordSchema,
+  type ChangePasswordFormValues,
+} from '../schemas/changePasswordSchema';
 
 /**
  * POST /api/account/change-password. Success revokes EVERY session on the server, so this browser

@@ -1,10 +1,13 @@
 import { expect, type Page } from '@playwright/test';
 
 const API = 'http://localhost:5075';
-const CORS = {
-  'Access-Control-Allow-Origin': 'http://localhost:3000',
-  'Access-Control-Expose-Headers': 'X-Correlation-ID',
-};
+/** CORS headers for the page that made the request (the app may be served on :3000 or, for the CSP check, :4173). */
+function corsFor(request: { headers: () => Record<string, string> }) {
+  return {
+    'Access-Control-Allow-Origin': request.headers().origin ?? 'http://localhost:3000',
+    'Access-Control-Expose-Headers': 'X-Correlation-ID',
+  };
+}
 
 /**
  * Fakes one API endpoint in the real browser (UI tests that run without the backend).
@@ -21,6 +24,7 @@ export async function fakeApi(
   await page.route(
     (url) => url.origin === API && url.pathname === path,
     async (route) => {
+      const CORS = corsFor(route.request());
       if (route.request().method() === 'OPTIONS') {
         await route.fulfill({
           status: 204,
@@ -67,6 +71,7 @@ export async function fakeApiHandler(
     (url) => url.origin === API && matches(url.pathname),
     async (route) => {
       const request = route.request();
+      const CORS = corsFor(request);
       if (request.method() === 'OPTIONS') {
         await route.fulfill({
           status: 204,
