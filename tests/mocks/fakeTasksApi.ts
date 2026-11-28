@@ -23,7 +23,7 @@ const PRIORITY_RANK = { Low: 0, Medium: 1, High: 2, Critical: 3 } as const;
 
 /**
  * A stateful fake of TasksController for integration tests:
- *  • list: ProjectId, Status, Priority, CategoryId, AssignedToMe, Overdue, Search, SortBy/Direction, paging;
+ *  • list: ProjectId, Status, Priority, CategoryId, AssignedToMe/AssignedToId, Overdue, Search, SortBy/Direction, paging;
  *  • create/update: future due date for new/changed values (400 dueDateUtc), not after project end (422);
  *  • status: the real workflow (409 for an invalid move);
  *  • assignee: members only (422);
@@ -77,6 +77,7 @@ export function serveTasks(
           (t) => !params.has('CategoryId') || t.categoryId === Number(params.get('CategoryId')),
         )
         .filter((t) => params.get('AssignedToMe') !== 'true' || t.assignedToId === currentUser.id)
+        .filter((t) => !params.has('AssignedToId') || t.assignedToId === params.get('AssignedToId'))
         .filter((t) => params.get('Overdue') !== 'true' || t.isOverdue)
         .filter(
           (t) =>

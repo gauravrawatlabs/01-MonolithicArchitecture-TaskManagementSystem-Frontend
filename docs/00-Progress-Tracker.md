@@ -15,8 +15,8 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
 | 9 | Category management | **Verified** (2026-11-27) | 19 new Vitest (337 total) · 3 e2e ×3 · real-API 1 (+1 admin, skipped) | 337/337 + 102/102 + 4/4 (1 skipped) | ✅ | [09-Phase9-Category-Management.md](09-Phase9-Category-Management.md) |
 | 10 | Project management | **Verified** (2026-11-27) | 36 new Vitest (373 total) · 3 e2e ×3 · real-API 1 (+1 admin, skipped) | 373/373 + 111/111 (×3) + 5/5 (2 skipped) | ✅ | [10-Phase10-Project-Management.md](10-Phase10-Project-Management.md) |
 | 11 | Task management | **Verified** (2026-11-28) | 56 new Vitest (429 total) · 3 e2e ×3 · real-API 1 (+1 admin, skipped) | 429/429 + 120/120 (×2) + 6/6 (3 skipped) | ✅ | [11-Phase11-Task-Management.md](11-Phase11-Task-Management.md) |
-| 12 | Kanban board and comments | Pending | | | | Waiting for approval to start |
-| 13 | Team and user management | Pending | | | | |
+| 12 | Kanban board and comments | **Verified** (2026-11-28) | 25 new Vitest (454 total) · 4 e2e ×3 · real-API 1 (+1 admin, skipped) | 454/454 + 130/130 (×2, 2 skipped) + 7/7 (4 skipped) | ✅ | [12-Phase12-Kanban-Board-and-Comments.md](12-Phase12-Kanban-Board-and-Comments.md) |
+| 13 | Team and user management | Pending | | | | Waiting for approval to start |
 | 14 | Settings and responsiveness | Pending | | | | |
 | 15 | Complete testing and QA | Pending | | | | |
 | 16 | Performance and security review | Pending | | | | Re-evaluate HttpOnly refresh-token cookie |
@@ -199,5 +199,22 @@ Statuses: Pending · In Progress · Implemented · Testing · Verified · Blocke
 - **Defects found and fixed:** missed verified-email rule for task writes; lost URL updates on quick successive
   changes (`useUrlState`); unnatural first sort direction; unchanged due date counted as changed; filters crowding
   phones. Details in 11 §5.
+- **Pending issues:** none.
+- **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-28.
+
+## Phase 12 — Kanban board and comments
+
+- **Tasks completed:** project picker + per-project Kanban (one query per column, URL filters, Show cancelled,
+  Load more); optimistic moves with rollback; pointer, touch (long-press) and keyboard dragging with
+  announcements, plus a "Move to…" menu; "Not allowed" targets; focus follows the moved card. Comments: oldest
+  first with Show more, add (Ctrl+Enter), author-only edit, delete by author/owner/Admin, verified email.
+- **Files created/modified:** see [12 §4](12-Phase12-Kanban-Board-and-Comments.md#4-files).
+- **Tests written:** 25 Vitest tests (9 unit, 16 integration); `e2e/board.spec.ts` (4 × 3); real-API
+  `e2e/backend/board-comments.backend.spec.ts` (regular user + optional admin/member flow).
+- **Tests passed:** Vitest 454/454 · Playwright UI 130/130 on 2 consecutive runs (2 skipped by design) · real API
+  7 passed, 4 skipped (admin flows need `E2E_ADMIN_EMAIL`/`E2E_ADMIN_PASSWORD`).
+- **Build status:** ✅ `npm run verify`; the board (dnd-kit) is a lazy chunk of 17.8 kB gzip.
+- **Defects found and fixed:** focus lost after a move; pickup announcement overwritten; page-wide sideways
+  scrolling on the board (grid sizing + sr-only escaping overflow). Details in 12 §5.
 - **Pending issues:** none.
 - **Final verification status:** ✅ Verified, approved by the project owner on 2026-11-28.

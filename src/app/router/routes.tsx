@@ -222,7 +222,7 @@ export function createAppRoutes(): RouteObject[] {
                               path: 'board',
                               handle: handle({ breadcrumb: 'Board' }),
                               ...lazyPage(
-                                () => import('@/features/projects/pages/ProjectBoardPage'),
+                                () => import('@/features/board/pages/ProjectBoardPage'),
                                 (m) => m.ProjectBoardPage,
                               ),
                             },

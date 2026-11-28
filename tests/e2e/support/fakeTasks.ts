@@ -95,6 +95,32 @@ export async function fakeTaskWorld(page: Page, { iOwnTheProject }: { iOwnThePro
     ],
   ]);
   let nextId = 3;
+  let nextCommentId = 100;
+  const comments: Record<string, unknown>[] = [
+    {
+      id: 1,
+      taskId: 1,
+      authorId: TEAMMATE,
+      authorName: 'Tara Teammate',
+      content: 'I can take the hero section.',
+      createdAtUtc: '2026-11-21T09:00:00Z',
+      updatedAtUtc: null,
+    },
+  ];
+  await fakeApiHandler(page, '/api/comments/*', ({ method, path, body }) => {
+    const id = Number(path.split('/').pop());
+    const comment = comments.find((c) => c.id === id);
+    if (!comment) return [404, { status: 404, title: 'Not Found' }];
+    if (method === 'DELETE') {
+      comments.splice(comments.indexOf(comment), 1);
+      return [204];
+    }
+    Object.assign(comment, {
+      content: (body as { content: string }).content.trim(),
+      updatedAtUtc: new Date().toISOString(),
+    });
+    return [200, comment];
+  });
 
   await fakeApiHandler(page, '/api/projects', () => [
     200,
@@ -119,9 +145,14 @@ export async function fakeTaskWorld(page: Page, { iOwnTheProject }: { iOwnThePro
     },
   ]);
   await fakeApiHandler(page, '/api/projects/*', () => [200, project]);
-  await fakeApiHandler(page, '/api/tasks', ({ method, body }) => {
+  await fakeApiHandler(page, '/api/tasks', ({ method, body, query }) => {
     if (method === 'GET') {
-      const items = [...tasks.values()];
+      // Enough filtering for the board (one query per status column) and the lists.
+      const items = [...tasks.values()].filter(
+        (t) =>
+          (!query.has('Status') || t.status === query.get('Status')) &&
+          (!query.has('AssignedToId') || t.assignedToId === query.get('AssignedToId')),
+      );
       return [
         200,
         {
@@ -154,6 +185,34 @@ export async function fakeTaskWorld(page: Page, { iOwnTheProject }: { iOwnThePro
     const [, , , rawId, action] = path.split('/');
     const task = tasks.get(Number(rawId));
     if (!task) return [404, { status: 404, title: 'Not Found' }];
+    if (action === 'comments') {
+      if (method === 'POST') {
+        const comment = {
+          id: nextCommentId++,
+          taskId: task.id,
+          authorId: FAKE_USER_ID,
+          authorName: me.fullName,
+          content: (body as { content: string }).content.trim(),
+          createdAtUtc: new Date().toISOString(),
+          updatedAtUtc: null,
+        };
+        comments.push(comment);
+        return [201, comment];
+      }
+      const items = comments.filter((c) => c.taskId === task.id);
+      return [
+        200,
+        {
+          items,
+          page: 1,
+          pageSize: 20,
+          totalCount: items.length,
+          totalPages: 1,
+          hasPreviousPage: false,
+          hasNextPage: false,
+        },
+      ];
+    }
     if (action === 'status') {
       const to = (body as { status: Status }).status;
       if (!NEXT[task.status as Status].includes(to))

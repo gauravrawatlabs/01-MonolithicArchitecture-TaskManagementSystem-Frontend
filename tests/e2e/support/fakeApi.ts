@@ -45,6 +45,8 @@ export async function fakeApi(
 export interface FakeRequest {
   method: string;
   path: string;
+  /** Query string parameters (e.g. Status, ProjectId). */
+  query: URLSearchParams;
   body: unknown;
 }
 
@@ -80,6 +82,7 @@ export async function fakeApiHandler(
       const [status, body] = respond({
         method: request.method(),
         path: new URL(request.url()).pathname,
+        query: new URL(request.url()).searchParams,
         body: raw ? (JSON.parse(raw) as unknown) : undefined,
       });
       await route.fulfill({

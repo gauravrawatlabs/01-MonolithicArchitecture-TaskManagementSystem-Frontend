@@ -18,4 +18,15 @@ export const workspaceHandlers = [
   ),
   http.get(apiUrl('/api/users/lookup'), () => HttpResponse.json([])),
   http.get(apiUrl('/api/categories'), () => HttpResponse.json([])),
+  http.get(apiUrl('/api/tasks/:taskId/comments'), () =>
+    HttpResponse.json({
+      items: [],
+      page: 1,
+      pageSize: 20,
+      totalCount: 0,
+      totalPages: 0,
+      hasPreviousPage: false,
+      hasNextPage: false,
+    }),
+  ),
 ];

@@ -1,4 +1,4 @@
-import { FileQuestion, MessageSquare, Pencil, Trash2 } from 'lucide-react';
+import { FileQuestion, Pencil, Trash2 } from 'lucide-react';
 import { type ReactNode, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
 
@@ -13,6 +13,7 @@ import { useBreadcrumbLabel } from '@/components/layout/breadcrumbLabels';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { paths } from '@/constants/routes';
 import { isEmailVerified, useAuth } from '@/features/auth';
+import { CommentsSection } from '@/features/comments';
 import { formatDateTime } from '@/utils/dates';
 
 import { AssigneeControl } from '../components/AssigneeControl';
@@ -186,13 +187,7 @@ function TaskDetails({ task }: { task: NonNullable<ReturnType<typeof useTask>['d
             </CardContent>
           </Card>
 
-          <Card>
-            <EmptyState
-              icon={MessageSquare}
-              title="Comments coming soon"
-              description="Discussion on tasks is built in Phase 12."
-            />
-          </Card>
+          <CommentsSection taskId={task.id} project={permissions.project} />
         </div>
 
         <Card className="content-start">

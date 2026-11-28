@@ -85,6 +85,7 @@ export function useDeleteTask() {
     mutationFn: (id: number) => tasksApi.remove(id),
     onSuccess: (_result, id) => {
       queryClient.removeQueries({ queryKey: taskKeys.detail(id) });
+      queryClient.removeQueries({ queryKey: ['comments', 'task', id] }); // they were deleted with the task
       void queryClient.invalidateQueries({ queryKey: taskKeys.lists() });
       void queryClient.invalidateQueries({ queryKey: DASHBOARD_KEY });
       void queryClient.invalidateQueries({ queryKey: PROJECTS_KEY });

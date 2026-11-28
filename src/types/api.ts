@@ -57,3 +57,7 @@ export type UserLookup = Schemas['UserLookupResponse'];
 // Task writes (Phase 11)
 export type CreateTaskRequest = Schemas['CreateTaskRequest'];
 export type UpdateTaskRequest = Schemas['UpdateTaskRequest'];
+
+// Comments (Phase 12)
+export type Comment = Schemas['CommentResponse'];
+export type PagedComments = Schemas['PagedResultOfCommentResponse'];
